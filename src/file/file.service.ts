@@ -172,6 +172,7 @@ export class FileService {
   private getContentType(extension: string): string {
     switch (extension) {
       case 'jpg':
+        return 'image/jpeg';
       case 'jpeg':
         return 'image/jpeg';
       case '.png':
@@ -179,7 +180,7 @@ export class FileService {
       case 'gif':
         return 'image/gif';
       default:
-        return 'application/octet-stream';
+        return 'image/png';
     }
   }
 
