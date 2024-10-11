@@ -65,7 +65,18 @@ You should use the following tech stack during this project:
    yarn install
    
 3. **.env variables**
-- You should update this point to include env names needed.
+   ```bash
+   TYPE=service_account
+   PROJECT_ID=<your_project_id>
+   PRIVATE_KEY_ID=<your_private_key_id>
+   PRIVATE_KEY=<your_private_key>
+   CLIENT_EMAIL=<your_client_email>
+   CLIENT_ID=<your_client_id>
+   UTH_URI=https://accounts.google.com/o/oauth2/auth
+   TOKEN_URI=https://oauth2.googleapis.com/token
+   AUTH_CERT_URL=https://www.googleapis.com/oauth2/v1/certs
+   CLIENT_CERT_URL=<your_client_cert_url>
+   UNIVERSAL_DOMAIN=googleapis.com
 
 4. **Start the Service**
     ```bash
