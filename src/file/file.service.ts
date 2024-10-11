@@ -11,6 +11,7 @@ import { Thumbnail } from './entities/thumbnail.entity';
 import { PaginationFileDto } from './dto/pagination-file.dto';
 import { IMessage } from 'src/interfaces/message';
 import { TypeThumbnail } from '../enum/type-thumbnail.enum';
+import { IFile } from 'src/interfaces/file';
 
 const primitiveFirebaseUrl = 'https://storage.googleapis.com';
 
@@ -89,6 +90,7 @@ export class FileService {
     try {
       
       const [ files, total ] = await this.fileRepository.findAndCount({
+        where: { isActive: true }, // to only retrieve active files
         take: limit,
         skip: offset,
       });
@@ -102,24 +104,46 @@ export class FileService {
     }
   }
 
-  public async findOne(id: string): Promise<any> { 
+  public async findOne(id: string): Promise<File> { 
     try {
       const file = await this.fileRepository.findOneBy({id});
       if (!file) {
         throw new BadRequestException(`File with ID: ${id} not found`);
       }
 
-      return this.transformDataFiles([file]);
+      if (!file.isActive) {
+        throw new BadRequestException(`File with ID: ${id} is not active so it was removed`);
+      }
+
+      return file;
+    } catch (error) {
+      this.handleExceptionsErrorOnDB(error);
+    }
+  }
+
+  async remove(id: string): Promise<IMessage> {
+    try {
+      const file = await this.findOne(id);
+
+      // apply a soft delete to avoid break dependencies will be applied
+      await this.fileRepository.update(
+        { id: file.id },
+        { isActive: false },
+      );
+
+      return {
+        msg: 'File was removed correctly',
+      }
     } catch (error) {
       this.handleExceptionsErrorOnDB(error);
     }
   }
 
   // transform data how you need it
-  private transformDataFiles(files: File[]) {
-    return files.map(file => ({
-      ...file,
-      thumbnails: file.thumbnails.map(thumbnail => thumbnail.url),
+  private transformDataFiles(files: File[]): IFile[] {
+    return files.map(({isActive, ...restFile}) => ({
+      ...restFile,
+      thumbnails: restFile.thumbnails.map(thumbnail => thumbnail.url),
     }));
   }
 

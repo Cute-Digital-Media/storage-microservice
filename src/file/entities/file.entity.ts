@@ -22,6 +22,9 @@ export class File {
   @Column({ nullable: true })
   uploadedBy?: string;
 
+  @Column({ type: 'boolean', nullable: false, default: true })
+  isActive: boolean = true;
+
   @OneToMany(
     () => Thumbnail,
     thumbnail => thumbnail.file,

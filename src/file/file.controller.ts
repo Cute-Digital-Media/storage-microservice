@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Param, UseInterceptors, UploadedFiles, Query, ParseUUIDPipe, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Param, UseInterceptors, UploadedFiles, Query, ParseUUIDPipe, UseGuards, Req, Delete } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { Request } from 'express';
@@ -39,6 +39,12 @@ export class FileController {
   @Get('')
   findAll(@Query() paginationFileDto: PaginationFileDto) {
     return this.fileService.findAll(paginationFileDto);
+  }
+
+  @Delete(':id')
+  @UseGuards(MockJwtAuthGuard) // remember to send "mocked-jwt-token" as bearer token to test this endpoint
+  remove(@Param('id', new ParseUUIDPipe()) id: string) {
+    return this.fileService.remove(id);
   }
 }
 
