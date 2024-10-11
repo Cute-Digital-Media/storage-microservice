@@ -1,4 +1,4 @@
-import Joi from 'joi';
+import * as Joi from 'joi';
 
 export const configSchema = Joi.object({
   NODE_ENV: Joi.string()
@@ -10,7 +10,8 @@ export const configSchema = Joi.object({
   FIREBASE_CLIENT_EMAIL: Joi.string().email().required(),
   FIREBASE_STORAGE_BUCKET: Joi.string().required(),
   JWT_SECRET: Joi.string().required(),
-  DATABASE_URL: Joi.string().required(),
+  DB_HOST: Joi.string().required(),
   REDIS_HOST: Joi.string().optional(),
   REDIS_PORT: Joi.number().optional(),
+  REDIS_TTl: Joi.number().optional(),
 });
