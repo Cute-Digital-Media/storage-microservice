@@ -1,17 +1,19 @@
 import { registerAs } from '@nestjs/config';
 import { DataSource, DataSourceOptions } from 'typeorm';
+import 'dotenv/config';
+import { Image } from '../../modules/images/entites/image.entity';
 
 const config = {
   type: 'postgres',
   host: process.env.DB_HOST,
-  port: parseInt(process.env.DB_PORT, 10),
+  port: +process.env.DB_PORT,
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
-  entities: ['src/**/*.entity{.ts,.js}'],
-  migrations: ['src/database/migrations/*{.ts,.js}'],
-  autoLoadEntities: true,
-  synchronize: false,
+  entities: [Image],
+  migrations: ['../database/migrations/*{.ts,.js}'],
+  //autoLoadEntities: true,
+  synchronize: !!process.env.DB_SYNCHRONIZE,
 };
 
 export default registerAs('typeorm', () => config);
