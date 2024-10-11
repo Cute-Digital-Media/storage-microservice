@@ -11,7 +11,6 @@ This project provides a scalable and efficient image storage microservice, featu
 - **Image retrieval** via public URLs.
 - **Security with JWT authentication** to protect access to the endpoints (Mocked data, not real authentication process required).
 
-
 ### Additional Features (Optional)
 
 - Thumbnail generation (for image resizing).
@@ -38,7 +37,7 @@ You should use the following tech stack during this project:
 - TypeORM.
 - PostgreSQL.
 - Redis (optional).
-  
+
 ---
 
 ## Project workflow
@@ -50,7 +49,41 @@ You should use the following tech stack during this project:
 
 ---
 
-## Installation and Setup
+## Steps to get server running on Development mode
+
+1. Clone the repository if it does not exists on your root
+2. Clone `.env.template` for `.env` file and setup all the environment variables
+3. Update dependencies with `yarn install` to fetch new dependencies added
+4. Create tables inside your postgres database with the command `npm run migration:run` and the File table and Thumbnail table will be created
+5. Launch the project with the command `npm run start:dev`
+
+## Firebase setup
+
+1. Install Firebase SDK
+
+```bash
+yarn add firebase-admin
+```
+
+## New instalations by my own to be able to create the storage server
+
+1. **Dotenv**
+   ```bash
+   yarn add dotenv
+   ```
+2. **Postgres**
+
+```
+yarn add pg
+```
+
+3. Sharp to create thumbnails
+
+```
+yarn add sharp
+```
+
+## Installations and Setup
 
 1. **Clone the Repository**
 
@@ -59,22 +92,30 @@ You should use the following tech stack during this project:
    ```bash
    git clone <REPOSITORY_URL>
    cd <PROJECT_NAME>
-   
+
+   ```
+
 2. **Install dependencies**
+
    ```bash
    yarn install
-   
+
+   ```
+
 3. **.env variables**
+
 - You should update this point to include env names needed.
 
 4. **Start the Service**
-    ```bash
-    yarn start:dev
-    
-6. **Final considerations and recomendations**
+
+   ```bash
+   yarn start:dev
+
+   ```
+
+5. **Final considerations and recomendations**
+
 - Keep it simple.
 - Be organized in your code.
 - Don't forget to provide the necessary environment variable names needed to run and test the project.
 - Good luck :).
-
-   

@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "resolveJsonModule": true, // added to allow read json files
+    "esModuleInterop": true,
     "module": "commonjs",
     "declaration": true,
     "removeComments": true,
