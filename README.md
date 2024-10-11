@@ -66,6 +66,7 @@ You should use the following tech stack during this project:
    
 3. **.env variables**
 - You should update this point to include env names needed.
+- The env names needed are added in the .env.template.
 
 4. **Start the Service**
     ```bash
