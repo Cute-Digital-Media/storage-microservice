@@ -56,6 +56,7 @@ You should use the following tech stack during this project:
 3. Update dependencies with `yarn install` to fetch new dependencies added
 4. Create tables inside your postgres database with the command `npm run migration:run` and the File table and Thumbnail table will be created
 5. Launch the project with the command `npm run start:dev`
+6. To see endpoints documentation with swagger open `http://localhost:3000/api`
 
 ## Firebase setup
 
@@ -81,6 +82,12 @@ yarn add pg
 
 ```
 yarn add sharp
+```
+
+4. Swagger
+
+```
+yarn add @nestjs/swagger swagger-ui-express
 ```
 
 ## Installations and Setup
