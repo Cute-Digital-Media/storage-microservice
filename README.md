@@ -72,10 +72,8 @@ You should use the following tech stack during this project:
     yarn start:dev
 
 5. **Test in Postman**
-    ```bash
 - You can import the postman `ms-images.postman_collection` collection located at the root of the project
 
 6. **Documentation**
-    ```bash
 - in /api
     
