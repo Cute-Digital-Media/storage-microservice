@@ -2,6 +2,8 @@ import { Inject, Injectable, BadRequestException } from '@nestjs/common';
 import { FirebaseService } from 'src/firebase/firebase.service';
 import * as admin from 'firebase-admin';
 import * as fs from 'fs';
+import * as sharp from 'sharp';
+import { Readable } from 'stream';
 
 @Injectable()
 export class ImageService {
@@ -27,23 +29,44 @@ export class ImageService {
     const destination = `${tenant}/${userId}/${folderName}/${fileName}`;
 
     try {
-      const [uploadedFile] = await bucket.upload(filePath, {
-        destination: destination,
-        metadata: {
-          contentType: file.mimetype,
-          metadata: {
-            imageId: imageId,
-            originalName: file.originalname,
-            tenant: tenant,
-            userId: userId,
-            folderName: folderName,
-          },
-        },
+      const optimizedBuffer = await sharp(filePath)
+        .resize(1200, 1200, { fit: 'inside', withoutEnlargement: true })
+        .webp({ quality: 80 })
+        .toBuffer();
+
+      const fileUpload = bucket.file(destination);
+      const stream = new Readable();
+      stream.push(optimizedBuffer);
+      stream.push(null);
+
+      await new Promise((resolve, reject) => {
+        stream
+          .pipe(
+            fileUpload.createWriteStream({
+              metadata: {
+                contentType: 'image/webp',
+                metadata: {
+                  imageId: imageId,
+                  originalName: file.originalname,
+                  tenant: tenant,
+                  userId: userId,
+                  folderName: folderName,
+                },
+              },
+            }),
+          )
+          .on('error', reject)
+          .on('finish', resolve);
       });
 
-      await uploadedFile.makePublic();
-      const publicUrl = uploadedFile.publicUrl();
-      fs.unlinkSync(filePath);
+      await fileUpload.makePublic();
+      const publicUrl = fileUpload.publicUrl();
+
+      try {
+        fs.unlinkSync(filePath);
+      } catch (unlinkError) {
+        console.warn(`Failed to delete local file: ${filePath}`, unlinkError);
+      }
 
       return `File uploaded successfully: ${publicUrl}`;
     } catch (error) {

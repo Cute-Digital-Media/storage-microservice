@@ -27,6 +27,9 @@ export class ImageController {
   @UseInterceptors(
     FileInterceptor('file', {
       fileFilter: fileFilter,
+      limits: {
+        fileSize: 5 * 1024 * 1024,
+      },
       storage: diskStorage({
         destination: './static/uploads',
         filename: fileNamer,
@@ -53,6 +56,7 @@ export class ImageController {
   }
 
   @Get(':term')
+  @UseGuards(UserAuthGuard)
   async getImage(
     @Param('term') term: string,
   ): Promise<{ url: string; name: string; id: string }> {
@@ -83,6 +87,7 @@ export class ImageController {
   }
 
   @Delete(':imageId')
+  @UseGuards(UserAuthGuard)
   async deleteImage(@Param('imageId') imageId: string): Promise<string> {
     await this.imageService.deleteImage(imageId);
     return `Image ${imageId} deleted succesfully`;
