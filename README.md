@@ -64,17 +64,16 @@ You should use the following tech stack during this project:
    ```bash
    yarn install
    
-3. **.env variables**
-- You should update this point to include env names needed.
+3. **.env.example**
+- You can use the .env.example to create the .env
 
 4. **Start the Service**
     ```bash
     yarn start:dev
-    
-6. **Final considerations and recomendations**
-- Keep it simple.
-- Be organized in your code.
-- Don't forget to provide the necessary environment variable names needed to run and test the project.
-- Good luck :).
 
-   
+5. **Test in Postman**
+- You can import the postman `ms-images.postman_collection` collection located at the root of the project
+
+6. **Documentation**
+- in /api
+    
