@@ -5,6 +5,9 @@
 # ENV
 .env
 
+# Google json file
+technical-test-storage-ms-firebase-adminsdk-xzswb-d1fe5cc074.json
+
 # Logs
 logs
 *.log
