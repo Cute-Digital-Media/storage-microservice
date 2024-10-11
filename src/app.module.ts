@@ -7,6 +7,9 @@ import * as serviceAccount from '../technical-test-storage-ms-firebase-adminsdk-
 import { FileModule } from './file/file.module';
 import { ConfigDB } from './db/config';
 
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -24,6 +27,8 @@ import { ConfigDB } from './db/config';
 
     FileModule,
   ],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {
   constructor() {

@@ -1,7 +1,7 @@
 
 export interface ICountAndTotalFile {
     count: number;
-    files: any[];
+    files: IFile[];
 }
 
 export interface IFile {

@@ -9,9 +9,10 @@ import sharp from 'sharp';
 import { File } from './entities/file.entity';
 import { Thumbnail } from './entities/thumbnail.entity';
 import { PaginationFileDto } from './dto/pagination-file.dto';
-import { IMessage } from 'src/interfaces/message';
+import { IMessage } from '../interfaces/message';
 import { TypeThumbnail } from '../enum/type-thumbnail.enum';
-import { IFile } from 'src/interfaces/file';
+import { IFile } from '../interfaces/file';
+import { ICountAndTotalFile } from '../interfaces/file';
 
 const primitiveFirebaseUrl = 'https://storage.googleapis.com';
 
@@ -26,8 +27,7 @@ export class FileService {
     private readonly thumbnailRepository: Repository<Thumbnail>,
   ) {}
 
-  // CREATE
-  public async create(
+  public async upload(
     files: Express.Multer.File[],
     username: string, // mock username
   ): Promise<IMessage> {
@@ -84,7 +84,7 @@ export class FileService {
 
   public async findAll(
     paginationFileDto: PaginationFileDto,
-  ): Promise<any> {
+  ): Promise<ICountAndTotalFile> {
     const { limit, offset } = paginationFileDto;
 
     try {

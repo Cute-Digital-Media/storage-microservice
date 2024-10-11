@@ -38,7 +38,7 @@ export class FileController {
     @UploadedFiles() files: Express.Multer.File[],
     @Req() req: Request|any, // in a real scenario create a decorator to get username is better
   ) {
-    return this.fileService.create(files, req.user.username);
+    return this.fileService.upload(files, req.user.username);
   }
 
   @Get(':id')

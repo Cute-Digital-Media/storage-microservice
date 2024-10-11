@@ -90,6 +90,12 @@ yarn add sharp
 yarn add @nestjs/swagger swagger-ui-express
 ```
 
+5. Testing
+
+```
+yarn add @nestjs/testing jest supertest -D
+```
+
 ## Installations and Setup
 
 1. **Clone the Repository**
@@ -126,3 +132,13 @@ yarn add @nestjs/swagger swagger-ui-express
 - Be organized in your code.
 - Don't forget to provide the necessary environment variable names needed to run and test the project.
 - Good luck :).
+
+6. Run tests
+
+```
+npm run test
+```
+
+```
+npm run test:e2e
+```
