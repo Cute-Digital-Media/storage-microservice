@@ -5,8 +5,12 @@ import { ImageModule } from './_shared/image/image.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { queueConfig } from './_shared/queue/domain/queue.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserModule } from './users/users.module';
-import { RoleModule } from './roles/roles.module';
+import { UsersModule } from './users/users.module';
+import { RolesModule } from './roles/roles.module';
+import { JwtModule } from '@nestjs/jwt';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from './_shared/auth/application/auth.guard';
+import { AuthModule } from './_shared/auth/auth.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -26,12 +30,24 @@ import { RoleModule } from './roles/roles.module';
         synchronize: true,
       }),
     }),
+    JwtModule.register({
+      global: true,
+      secret: process.env.SECRET,
+      signOptions: { expiresIn: process.env.EXPIRESIN },
+    }),
     ImageModule,
-    UserModule,
-    RoleModule,
+    UsersModule,
+    RolesModule,
+    AuthModule,
     queueConfig,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+  ],
 })
 export class AppModule {}
