@@ -8,8 +8,8 @@ const logger = createLogger({
         format.json(),
     ),
     transports: [
-        new transports.Console(), // Para mostrar en la consola
-        new transports.File({ filename: 'combined.log' }), // Para guardar en un archivo
+        new transports.Console(),
+        new transports.File({ filename: 'combined.log' }), 
     ],
 });
 

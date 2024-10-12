@@ -11,11 +11,9 @@ export class Image {
     @Column()
     url: string;
 
-    // Nuevo: Tamaño de la imagen en bytes (validación de tamaño)
     @Column({ type: 'int' })
     size: number;
 
-    // Nuevo: Usuario que subió la imagen (auditoría)
     @Column({ nullable: true })
     uploadedBy: string;
 

@@ -17,6 +17,6 @@ export const FirebaseProvider: Provider = {
                 storageBucket: `${process.env.FIREBASE_PROJECT_ID}.appspot.com`,
             });
         }
-        return admin.app(); // Devuelve la instancia existente
+        return admin.app();
     },
 };

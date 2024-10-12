@@ -28,7 +28,7 @@ export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply((req, res, next) => {
-        logger.info(`Request... ${req.method} ${req.url}`); // Loguear cada petición
+        logger.info(`Request... ${req.method} ${req.url}`);
         next();
       })
       .forRoutes('*');
