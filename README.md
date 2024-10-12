@@ -77,4 +77,5 @@ You should use the following tech stack during this project:
 - Don't forget to provide the necessary environment variable names needed to run and test the project.
 - Good luck :).
 
-   
+## Acceso a Swagger
+- http://localhost:3000/api
