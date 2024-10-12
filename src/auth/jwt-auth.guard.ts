@@ -7,8 +7,9 @@ export class JwtAuthGuard implements CanActivate {
         const token = request.headers.authorization?.split(' ')[1];
 
         if (token === 'fake-jwt-token') {
-            return true; // Token válido simulado
+            return true;
         }
-        return false; // Rechazar si no es válido
+        return false;
     }
+
 }

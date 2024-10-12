@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Controller, Post, UploadedFile, UseInterceptors, Get, Param, Delete, NotFoundException, BadRequestException, Body } from '@nestjs/common';
+import { Controller, UseGuards, Post, UploadedFile, UseInterceptors, Get, Param, Delete, NotFoundException, BadRequestException, Body } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FirebaseService } from '../firebase/firebase.service';
 import { ImagesService } from './services/images.service';
@@ -7,10 +7,9 @@ import { ApiTags, ApiOperation, ApiResponse, ApiConsumes, ApiBody, ApiParam } fr
 import logger from '../logger';
 import { Image } from './entities/image.entity';
 import { ImageTransformService } from './services/image-transform.service';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
-
-
-@ApiTags('images') 
+@UseGuards(JwtAuthGuard) @ApiTags('images') 
 @Controller('images')
 export class ImageController {
     constructor(
