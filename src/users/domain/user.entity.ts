@@ -25,7 +25,7 @@ export class User {
   })
   password: string;
 
-  @Column()
+  @Column({ unique: true })
   @ApiProperty({
     description: 'Email address of the user',
     example: 'john.doe@example.com',
