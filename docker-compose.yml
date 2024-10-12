@@ -2,7 +2,7 @@ version: '3.7'
 #
 services:
   mysql:
-    container_name: database-local
+    container_name: test-database-local
     image: postgres:15.3
     ports:
       - 5432:5432
