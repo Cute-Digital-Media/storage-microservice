@@ -1,14 +1,15 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { app } from 'firebase-admin';
 import { v4 as uuidv4 } from 'uuid';
+import { FileInfo } from '../images/pipes/file-info';
 
 @Injectable()
 export class FirebaseService {
   constructor(@Inject('FIREBASE_APP') private firebaseApp: app.App) {}
 
-  async uploadFile(file: Express.Multer.File): Promise<string> {
+  async uploadImage(file: FileInfo): Promise<string> {
     const uuid = uuidv4();
-    const fileName = `${file.originalname}-${uuid}`;
+    const fileName = `${file.originalName}-${uuid}`;
     const bucket = this.firebaseApp
       .storage()
       .bucket(this.firebaseApp.options.storageBucket);

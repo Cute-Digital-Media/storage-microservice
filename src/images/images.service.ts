@@ -15,8 +15,10 @@ export class ImagesService {
   ) {}
 
   async uploadImage(imageDto: ImageDto) {
-    imageDto.url = await this.firebaseService.uploadFile(imageDto.file);
-    imageDto.file = undefined;
+    imageDto.url = await this.firebaseService.uploadImage(imageDto.fileInfo);
+    imageDto.orininalSize = imageDto.fileInfo.originalSize;
+    imageDto.compressedSize = imageDto.fileInfo.compressedSize;
+    imageDto.fileInfo = undefined;
     const aux = await this.imageRepository.save({
       ...imageDto,
     } as ImageEntity);

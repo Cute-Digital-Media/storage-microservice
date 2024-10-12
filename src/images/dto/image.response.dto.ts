@@ -1,6 +1,18 @@
-import { ImageDto } from './image.dto';
+import { IsDate, IsInt, IsString, IsUrl } from 'class-validator';
 
-export class ImageResponseDto extends (ImageDto as new () => Omit<
-  ImageDto,
-  'file'
->) {}
+export class ImageResponseDto {
+  @IsString()
+  name: string;
+
+  @IsDate()
+  uploadDate: Date;
+
+  @IsInt()
+  orininalSize: number;
+
+  @IsInt()
+  compressedSize: number;
+
+  @IsUrl()
+  url: string;
+}
