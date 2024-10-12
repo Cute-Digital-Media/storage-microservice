@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ImageModule } from './_shared/image/image.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { queueConfig } from './_shared/queue/domain/queue.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -11,6 +10,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './_shared/auth/application/auth.guard';
 import { AuthModule } from './_shared/auth/auth.module';
+import { ImageModule } from './images/images.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -35,10 +35,10 @@ import { AuthModule } from './_shared/auth/auth.module';
       secret: process.env.SECRET,
       signOptions: { expiresIn: process.env.EXPIRESIN },
     }),
-    ImageModule,
     UsersModule,
     RolesModule,
     AuthModule,
+    ImageModule,
     queueConfig,
   ],
   controllers: [AppController],

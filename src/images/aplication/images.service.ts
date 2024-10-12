@@ -5,7 +5,7 @@ import { InjectQueue } from '@nestjs/bullmq';
 import { InjectImageSendyQueue } from 'src/_shared/queue/infrastructure/inject-queue.decorator';
 import { queueOpsEnums } from 'src/_shared/queue/domain/queue-ops-enum.interface';
 @Injectable()
-export class ImageService {
+export class ImagesService {
   private storage: Storage;
 
   constructor(
