@@ -77,4 +77,22 @@ You should use the following tech stack during this project:
 - Don't forget to provide the necessary environment variable names needed to run and test the project.
 - Good luck :).
 
-   
+
+
+7. Additional notes: the roles handling is missing intentional some end points because I think the we dont need for the test.
+The redis cache is using in the get single url end point and is very easy extend to the get all the url and pagination but I dont left more time.
+
+I make some unit test for the user.service for testing porpoise
+
+For the task [[optional] Log Persistence #12] I dont get the point about the log persistence I meaning I dont know if you need to handle in the same pg database or in another resource like ElasticSearch or something like that
+
+- Run docker compose for up the additional resources pg database and redis cache manager
+
+```
+docker-compose up -d
+```
+
+```
+all the env var example are in .env.template file
+```
+
