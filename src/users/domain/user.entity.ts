@@ -32,6 +32,13 @@ export class User {
   })
   email: string;
 
+  @Column({ type: 'uuid' })
+  @ApiProperty({
+    description: 'Unique identifier for the tenant',
+    example: 'a3e95e9c-72be-4d89-a032-abc123def456',
+  })
+  tenantId: string;
+
   @ManyToOne(() => Role, (role) => role.users)
   @ApiProperty({
     description: 'Role assigned to the user',

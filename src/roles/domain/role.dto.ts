@@ -6,15 +6,6 @@ import { Role } from 'src/roles/domain/role.enity';
 type RoleWithout = Omit<
   Role,
   | 'id'
-  | 'createdAt'
-  | 'updatedAt'
-  | 'createdBy'
-  | 'updatedBy'
-  | 'deletedAt'
-  | 'deletedAt'
-  | 'deletedBy'
-  | 'version'
-  | 'companyId'
   | 'users'
 >;
 

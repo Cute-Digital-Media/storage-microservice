@@ -1,20 +1,11 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsEmail, IsString, IsInt, MinLength, MaxLength, Matches } from 'class-validator';
+import { IsNotEmpty, IsEmail, IsString, IsInt, MinLength, MaxLength, Matches, IsUUID } from 'class-validator';
 import { User } from './user.entity';
 
 type UserWithout = Omit<
   User,
   | 'id'
-  | 'createdAt'
-  | 'updatedAt'
-  | 'createdBy'
-  | 'updatedBy'
-  | 'deletedAt'
-  | 'deletedAt'
-  | 'deletedBy'
-  | 'version'
-  | 'companyId'
   | 'role'
 >;
 
@@ -57,6 +48,14 @@ export class CreateUserDto implements UserWithout {
   @IsNotEmpty()
   @IsInt()
   roleId: number;
+
+  @ApiProperty({
+    description: 'Unique identifier for the tenant',
+    example: 'a3e95e9c-72be-4d89-a032-abc123def456',
+  })
+  @IsUUID()
+  @IsNotEmpty()
+  tenantId: string;
 }
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {}
