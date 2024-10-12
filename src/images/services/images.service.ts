@@ -15,6 +15,11 @@ export class ImagesService {
         return this.imageRepository.save(image);
     }
 
+    // Nuevo método para obtener todas las imágenes
+    async getAllImages(): Promise<Image[]> {
+        return await this.imageRepository.find(); // Devuelve todas las imágenes
+    }
+    
     async getImage(id: number): Promise<Image> {
         const image = await this.imageRepository.findOne({ where: { id } });
         if (!image) {
