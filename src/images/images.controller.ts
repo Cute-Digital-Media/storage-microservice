@@ -9,8 +9,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { ImageDto } from './dto/image.dto';
 import { ImagesService } from './images.service';
-import { FileInfo } from './pipes/file-info';
-import { SharpPipe } from './pipes/sharp.pipe';
+import { ResizeImagePipe } from './pipes/resize-image.pipe';
 
 @Controller('images')
 @ApiTags('images')
@@ -23,7 +22,8 @@ export class ImagesController {
     schema: {
       type: 'object',
       properties: {
-        name: { type: 'string' },
+        searchableFileName: { type: 'string', default: 'Test Image' },
+        folderName: { type: 'string', default: 'images' },
         file: {
           type: 'string',
           format: 'binary',
@@ -33,11 +33,10 @@ export class ImagesController {
   })
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(
-    @UploadedFile(SharpPipe) fileInfo: FileInfo,
-    @Body() imageDto: ImageDto,
+    @UploadedFile(ResizeImagePipe) resisedImageData: ImageDto,
+    @Body() data: ImageDto,
   ) {
-    imageDto.fileInfo = fileInfo;
-    imageDto.uploadDate = new Date();
-    return await this.imagesService.uploadImage(imageDto);
+    data = { ...data, ...resisedImageData, uploadDate: new Date() };
+    return await this.imagesService.uploadImage(data);
   }
 }

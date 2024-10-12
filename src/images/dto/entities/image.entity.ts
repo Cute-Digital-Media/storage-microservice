@@ -6,13 +6,16 @@ export class ImageEntity {
   id?: number;
 
   @Column()
-  name: string;
+  searchableFileName: string;
 
   @Column()
-  uploadDate?: Date;
+  originalFileName: string;
+
+  @Column()
+  uploadDate: Date;
 
   @Column({ default: 0 })
-  orininalSize: number;
+  originalSize: number;
 
   @Column({ default: 0 })
   compressedSize: number;

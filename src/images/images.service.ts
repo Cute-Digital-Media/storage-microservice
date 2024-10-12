@@ -4,7 +4,6 @@ import { Repository } from 'typeorm';
 import { FirebaseService } from '../firebase/firebase.service';
 import { ImageEntity } from './dto/entities/image.entity';
 import { ImageDto } from './dto/image.dto';
-import { ImageResponseDto } from './dto/image.response.dto';
 
 @Injectable()
 export class ImagesService {
@@ -14,15 +13,11 @@ export class ImagesService {
     private readonly firebaseService: FirebaseService,
   ) {}
 
-  async uploadImage(imageDto: ImageDto) {
-    imageDto.url = await this.firebaseService.uploadImage(imageDto.fileInfo);
-    imageDto.orininalSize = imageDto.fileInfo.originalSize;
-    imageDto.compressedSize = imageDto.fileInfo.compressedSize;
-    imageDto.fileInfo = undefined;
-    const aux = await this.imageRepository.save({
+  async uploadImage(imageDto: ImageDto): Promise<ImageEntity> {
+    imageDto.url = await this.firebaseService.uploadImage(imageDto);
+    imageDto.buffer = undefined;
+    return await this.imageRepository.save({
       ...imageDto,
     } as ImageEntity);
-    const response = { ...aux } as ImageResponseDto;
-    return response;
   }
 }
