@@ -1,3 +1,4 @@
+import { NotFoundException } from '@nestjs/common';
 import {
   DeepPartial,
   FindOptionsWhere,
@@ -7,7 +8,6 @@ import {
   SelectQueryBuilder,
   FindManyOptions,
   FindOneOptions,
-  ObjectLiteral,
   ObjectId,
 } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
@@ -19,22 +19,30 @@ export abstract class BaseService<T> {
     try {
       return await this.repository.save(entity);
     } catch (error) {
-      console.error('Error al guardar la entidad:', error);
+      console.error('Error saving entities:', error);
       throw error;
     }
   }
 
   async findOne(
     optionsOrQueryBuilder?: FindOneOptions<T> | SelectQueryBuilder<T>,
-  ): Promise<T | null> {
+  ): Promise<T> {
     try {
+      let entity: T | null;
+
       if (optionsOrQueryBuilder instanceof SelectQueryBuilder) {
-        return await optionsOrQueryBuilder.getOne();
+        entity = await optionsOrQueryBuilder.getOne();
       } else {
-        return await this.repository.findOne(optionsOrQueryBuilder);
+        entity = await this.repository.findOne(optionsOrQueryBuilder);
       }
+
+      if (!entity) {
+        throw new NotFoundException('Entity not found');
+      }
+
+      return entity;
     } catch (error) {
-      console.error('Error al encontrar la entidad:', error);
+      console.error('Error finding entities:', error);
       throw error;
     }
   }
@@ -49,7 +57,7 @@ export abstract class BaseService<T> {
         return await this.repository.find(optionsOrQueryBuilder);
       }
     } catch (error) {
-      console.error('Error al encontrar las entidades:', error);
+      console.error('Error finding entities:', error);
       throw error;
     }
   }
@@ -89,11 +97,14 @@ export abstract class BaseService<T> {
   }
 
   async delete(criteria: FindOptionsWhere<T>): Promise<DeleteResult> {
+    let data: DeleteResult;
     try {
-      return await this.repository.delete(criteria);
+      data = await this.repository.delete(criteria);
     } catch (error) {
-      console.error('Error al eliminar la entidad:', error);
+      console.error('Error deleting entity:', error);
       throw error;
     }
+    if (!data.affected) throw new NotFoundException('Entity not found');
+    return data;
   }
 }
