@@ -39,4 +39,22 @@ export class FirebaseService {
             blobStream.end(file.buffer);
         });
     }
+
+    async deleteImage(url: string): Promise<void> {
+        const bucket = admin.storage().bucket();
+
+        // Extraer el nombre del archivo y decodificarlo.
+        const fileName = decodeURIComponent(url.split('/').pop().split('?')[0]);
+
+        const file = bucket.file(fileName);
+
+        try {
+            await file.delete();
+            console.log(`Archivo ${fileName} eliminado de Firebase Storage.`);
+        } catch (error) {
+            console.error(`Error al eliminar archivo ${fileName}:`, error);
+            throw new BadRequestException('No se pudo eliminar la imagen');
+        }
+    }
+
 }

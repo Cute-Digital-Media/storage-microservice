@@ -22,4 +22,8 @@ export class ImagesService {
         }
         return image;
     }
+
+    async deleteImage(id: number): Promise<void> {
+        await this.imageRepository.delete(id);
+    }
 }

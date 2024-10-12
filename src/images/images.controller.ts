@@ -1,14 +1,5 @@
 /* eslint-disable prettier/prettier */
-import {
-    Controller,
-    Post,
-    UploadedFile,
-    UseInterceptors,
-    Get,
-    Param,
-    BadRequestException,
-    Body
-} from '@nestjs/common';
+import { Controller, Post, UploadedFile, UseInterceptors, Get, Param, Delete, NotFoundException, BadRequestException, Body } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FirebaseService } from '../firebase/firebase.service';
 import { ImagesService } from './services/images.service';
@@ -79,4 +70,29 @@ export class ImageController {
         return this.imageService.getImage(id);
     }
 
+    @Delete(':id')
+    @ApiOperation({ summary: 'Delete an image by ID' }) // Resumen de la operación
+    @ApiParam({
+        name: 'id',
+        type: Number,
+        description: 'ID of the image to delete',
+        example: 1,
+    }) // Parámetro ID
+    @ApiResponse({ status: 200, description: 'Image deleted successfully.' }) // Respuesta exitosa
+    @ApiResponse({ status: 404, description: 'Image not found.' }) // Respuesta para imagen no encontrada
+    @ApiResponse({ status: 400, description: 'Invalid ID or failed to delete the image.' }) // Respuesta para error
+    async deleteImage(@Param('id') id: number) {
+        const image = await this.imageService.getImage(id);
+        if (!image) {
+            throw new NotFoundException(`No se encontró la imagen con ID ${id}`);
+        }
+
+        // Elimina la imagen de Firebase Storage.
+        await this.firebaseService.deleteImage(image.url);
+
+        // Elimina el registro de la base de datos.
+        await this.imageService.deleteImage(id);
+
+        return { message: `Imagen con ID ${id} eliminada exitosamente` };
+    }
 }
