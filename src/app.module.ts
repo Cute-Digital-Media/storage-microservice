@@ -1,10 +1,11 @@
-import { Module } from '@nestjs/common';
+import { Module, MiddlewareConsumer } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ImagesModule } from './images/images.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Image } from './images/entities/image.entity';
 import { FirebaseModule } from './firebase/firebase.module';
+import logger from './logger';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -23,4 +24,13 @@ import { FirebaseModule } from './firebase/firebase.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule { 
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply((req, res, next) => {
+        logger.info(`Request... ${req.method} ${req.url}`); // Loguear cada petición
+        next();
+      })
+      .forRoutes('*');
+  }
+}

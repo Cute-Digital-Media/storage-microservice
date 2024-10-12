@@ -4,7 +4,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { FirebaseService } from '../firebase/firebase.service';
 import { ImagesService } from './services/images.service';
 import { ApiTags, ApiOperation, ApiResponse, ApiConsumes, ApiBody, ApiParam } from '@nestjs/swagger';
-
+import logger from '../logger';
 
 @ApiTags('images') 
 @Controller('images')
@@ -41,12 +41,14 @@ export class ImageController {
         @Body('uploadedBy') uploadedBy: string = 'usuario_simulado'
     ) {
         if (!file) {
+            logger.error('No se ha proporcionado ningún archivo');
             throw new BadRequestException('No se ha proporcionado ningún archivo');
         }
 
         // Validar el tamaño del archivo (máximo 5 MB)
         const MAX_SIZE = 5 * 1024 * 1024;
         if (file.size > MAX_SIZE) {
+            logger.warn('El archivo es demasiado grande (máximo 5 MB)');
             throw new BadRequestException('El archivo es demasiado grande (máximo 5 MB)');
         }
 
@@ -57,7 +59,7 @@ export class ImageController {
             file.size,
             uploadedBy
         );
-
+        logger.info(`Imagen subida: ${file.originalname}, URL: ${url}`);
         return { image };
     }
 
@@ -84,6 +86,7 @@ export class ImageController {
     async deleteImage(@Param('id') id: number) {
         const image = await this.imageService.getImage(id);
         if (!image) {
+            logger.warn(`No se encontró la imagen con ID ${id}`);
             throw new NotFoundException(`No se encontró la imagen con ID ${id}`);
         }
 
@@ -92,7 +95,7 @@ export class ImageController {
 
         // Elimina el registro de la base de datos.
         await this.imageService.deleteImage(id);
-
+        logger.info(`Imagen con ID ${id} eliminada exitosamente`);
         return { message: `Imagen con ID ${id} eliminada exitosamente` };
     }
 }
