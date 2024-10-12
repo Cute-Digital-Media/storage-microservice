@@ -1,11 +1,20 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, ParseIntPipe } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Body,
+  Param,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { CreateRoleDto, UpdateRoleDto } from '../domain/role.dto';
-import { RoleService } from '../application/role.service';
+import { RolesService } from '../application/roles.service';
 import { Role } from '../domain/role.enity';
 
 @Controller('roles')
 export class RoleController {
-  constructor(private readonly roleService: RoleService) {}
+  constructor(private readonly roleService: RolesService) {}
 
   @Post()
   async create(@Body() createRoleDto: CreateRoleDto): Promise<Role> {

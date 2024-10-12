@@ -20,6 +20,13 @@ export class User {
 
   @Column()
   @ApiProperty({
+    description: 'Password of the user',
+    example: 'TotiSaltarin',
+  })
+  password: string;
+
+  @Column()
+  @ApiProperty({
     description: 'Email address of the user',
     example: 'john.doe@example.com',
   })

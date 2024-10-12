@@ -1,6 +1,6 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsEmail, IsString, IsInt } from 'class-validator';
+import { IsNotEmpty, IsEmail, IsString, IsInt, MinLength, MaxLength, Matches } from 'class-validator';
 import { User } from './user.entity';
 
 type UserWithout = Omit<
@@ -27,6 +27,20 @@ export class CreateUserDto implements UserWithout {
   @IsNotEmpty()
   @IsString()
   username: string;
+
+  @ApiProperty({
+    description: 'Password of the user',
+    example: 'TotiSaltarin',
+  })
+  @MinLength(8, { message: 'Password must be at least 8 characters long' })
+  @MaxLength(20, { message: 'Password must not exceed 20 characters' })
+  @Matches(/(?=.*[A-Z])/, { message: 'Password must contain at least one uppercase letter' })
+  @Matches(/(?=.*[a-z])/, { message: 'Password must contain at least one lowercase letter' })
+  @Matches(/(?=.*\d)/, { message: 'Password must contain at least one number' })
+  @Matches(/(?=.*\W)/, { message: 'Password must contain at least one special character' })
+  @IsNotEmpty()
+  password: string;
+
 
   @ApiProperty({
     description: 'Email address of the user',

@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { Role } from '../domain/role.enity';
 
 @Injectable()
-export class RoleService extends BaseService<Role> {
+export class RolesService extends BaseService<Role> {
   constructor(
     @InjectRepository(Role)
     private readonly roleRepository: Repository<Role>,
