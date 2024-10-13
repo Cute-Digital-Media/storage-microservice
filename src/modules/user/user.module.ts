@@ -7,9 +7,10 @@ import { UserService } from './user.service';
 import { UserController } from './user.controller';
 import { UserCreateUseCase } from './app/use-cases/user.create.use-case';
 import { UserFindByEmailUseCase } from './app/use-cases/user.findByEmail.use-case';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity])],
+  imports: [TypeOrmModule.forFeature([UserEntity]), PassportModule],
   providers: [
     UserRepository,
     UserMapper,

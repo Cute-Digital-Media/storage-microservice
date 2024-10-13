@@ -5,11 +5,11 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class UserCreateUseCase {
   constructor(private readonly repository: UserRepository) {}
-  async execute(user: UserCreateDto): Promise<void> {
+  async execute(user: UserCreateDto): Promise<UserDomain> {
     user.password = await UserDomain.hashPassword(user.password);
     const userDomain = UserDomain.create(user.name, user.email, user.password);
     try {
-      await this.repository.save(userDomain);
+      return await this.repository.save(userDomain);
     } catch (error) {
       throw error;
     }

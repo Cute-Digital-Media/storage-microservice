@@ -18,7 +18,8 @@ export class UserRepository implements UserDomainRepository {
     }
     return this.mapper.toDomain(user);
   }
-  async save(user: UserDomain): Promise<void> {
-    await this.repository.save(this.mapper.toEntity(user));
+  async save(user: UserDomain): Promise<UserDomain> {
+    const res = await this.repository.save(this.mapper.toEntity(user));
+    return this.mapper.toDomain(res);
   }
 }
