@@ -61,7 +61,6 @@ export abstract class BaseService<T> {
 
       return entity;
     } catch (error) {
-      console.error('Error finding entities:', error);
       const exception = this.errorMap[error.code];
       if (exception) throw exception;
       throw error;
@@ -78,7 +77,6 @@ export abstract class BaseService<T> {
         return await this.repository.find(optionsOrQueryBuilder);
       }
     } catch (error) {
-      console.error('Error finding entities:', error);
       const exception = this.errorMap[error.code];
       if (exception) throw exception;
       throw error;
@@ -101,7 +99,6 @@ export abstract class BaseService<T> {
     try {
       return await this.repository.update(criteria, entity);
     } catch (error) {
-      console.error('Error updating the entity:', error);
       throw error;
     }
   }
@@ -114,7 +111,6 @@ export abstract class BaseService<T> {
     try {
       return await this.repository.increment(where, field, incremental);
     } catch (error) {
-      console.error('Error incrementing the field:', error);
       const exception = this.errorMap[error.code];
       if (exception) throw exception;
       throw error;
@@ -126,7 +122,6 @@ export abstract class BaseService<T> {
     try {
       data = await this.repository.delete(criteria);
     } catch (error) {
-      console.error('Error deleting entity:', error);
       const exception = this.errorMap[error.code];
       if (exception) throw exception;
       throw error;

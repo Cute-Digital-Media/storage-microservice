@@ -8,5 +8,6 @@ import { RoleController } from './insfractuture/user.controller';
   imports: [TypeOrmModule.forFeature([Role])],
   providers: [RolesService],
   controllers: [RoleController],
+  exports: [RolesService],
 })
 export class RolesModule {}

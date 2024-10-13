@@ -2,9 +2,16 @@ import { flatten } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 import { Role } from 'src/roles/domain/role.enity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  Unique,
+} from 'typeorm';
 
 @Entity()
+@Unique(['username', 'email'])
 export class User {
   @PrimaryGeneratedColumn()
   @ApiProperty({
@@ -13,7 +20,7 @@ export class User {
   })
   id: number;
 
-  @Column({ unique: true, nullable: false })
+  @Column({ nullable: false })
   @ApiProperty({
     description: 'Username of the user',
     example: 'john_doe',
@@ -28,7 +35,7 @@ export class User {
   })
   password: string;
 
-  @Column({ unique: true, nullable: false })
+  @Column({ nullable: false })
   @ApiProperty({
     description: 'Email address of the user',
     example: 'john.doe@example.com',
