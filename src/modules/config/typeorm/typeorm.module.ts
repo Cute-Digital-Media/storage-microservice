@@ -22,8 +22,9 @@ export const getTypeOrmModuleOptions = (
     migrationsRun: true,
     migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
     cli: {
-      migrationsDir: 'src/migrations',
+      migrationsDir: './src/modules/config/database/migrations',
     },
+    migrationsTableName: 'migrations',
   }) as TypeOrmModuleOptions;
 @Module({
   imports: [
