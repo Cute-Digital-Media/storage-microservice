@@ -1,3 +1,3 @@
 export const queueEnums = {
-    ImageSend : "IMAGE_SEND"
-}
+  ImageSend: 'IMAGE_SEND',
+};

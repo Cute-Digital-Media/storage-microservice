@@ -1,3 +1,3 @@
 export const queueOpsEnums = {
-    Send : "SEND"
-}
+  Send: 'SEND',
+};

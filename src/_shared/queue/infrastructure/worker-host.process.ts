@@ -23,13 +23,17 @@ export abstract class WorkerHostProcessor extends WorkerHost {
   @OnWorkerEvent('failed')
   onFailed(job: Job) {
     const { id, name, queueName, failedReason } = job;
-    this.logger.error(`Job id: ${id}, name: ${name} failed in queue ${queueName}. Failed reason: ${failedReason}`);
+    this.logger.error(
+      `Job id: ${id}, name: ${name} failed in queue ${queueName}. Failed reason: ${failedReason}`,
+    );
   }
 
   @OnWorkerEvent('active')
   onActive(job: Job) {
     const { id, name, queueName, timestamp } = job;
     const startTime = timestamp ? new Date(timestamp).toISOString() : '';
-    this.logger.log(`Job id: ${id}, name: ${name} starts in queue ${queueName} on ${startTime}.`);
+    this.logger.log(
+      `Job id: ${id}, name: ${name} starts in queue ${queueName} on ${startTime}.`,
+    );
   }
 }

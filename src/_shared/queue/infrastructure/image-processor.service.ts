@@ -13,11 +13,17 @@ export class MathBinaryOperationProcessor extends WorkerHostProcessor {
   constructor(private imageProcessing: ImageProcessing) {
     super();
   }
- async process(job: Job<ImageJobData, number, string>): Promise<number> {
-    const { file } = job.data;
+  async process(job: Job<ImageJobData, number, string>): Promise<number> {
+    const { file, tenantId } = job.data;
+    const { user_id, folder_name } = job.data.dto;
     switch (job.name) {
       case queueOpsEnums.Send:
-      await this.imageProcessing.handleResizeAndSend(job.data.file);
+        return await this.imageProcessing.handleResizeAndSend(
+          file,
+          user_id,
+          folder_name,
+          tenantId,
+        );
     }
     throw new BadRequestException(`Unknown job name: ${job.name}`);
   }

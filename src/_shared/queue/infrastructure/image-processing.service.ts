@@ -12,11 +12,30 @@ export class ImageProcessing {
     this.storage = this.firebaseApp.storage();
   }
 
-  async handleResizeAndSend(file: Express.Multer.File) {
+  async createFolder(folderName: string, bucket: any): Promise<string> {
+    const folderPath = `${folderName}`;
+    console.log(folderPath);
+
+    const result = await bucket.file(folderPath); //.save(null);
+    console.log(result);
+    return folderPath;
+  }
+
+  async handleResizeAndSend(
+    file: Express.Multer.File,
+    user_id: number,
+    folder_name: string,
+    tenantId: string,
+  ) {
     const uuid = uuidv4(); // Genera un UUID único para el nombre del archivo
-    const fileName = `${uuid}-${file.originalname}`; // Crea el nombre del archivo
+    const fileName = `${file.originalname}-${uuid}`; // Crea el nombre del archivo
     const bucket = this.storage.bucket(this.firebaseApp.options.storageBucket); // Obtiene el bucket de Firebase
-    const fileUpload = bucket.file(fileName); // Crea un archivo en el bucket
+    const folderPath = await this.createFolder(
+      `${tenantId}/${user_id}/${folder_name ? folder_name : ''}`,
+      bucket,
+    );
+    console.log(folderPath);
+    const fileUpload = bucket.file(`${folderPath}/${fileName}`); // Crea un archivo en el bucket
 
     let processedBuffer: Buffer = file.buffer; // Buffer de la imagen, inicialmente el original
 
@@ -57,9 +76,5 @@ export class ImageProcessing {
     });
 
     return url; // Retorna la URL del archivo
-
-    // Aquí puedes subir el buffer redimensionado a Firebase o realizar otras acciones
-    console.log(`Imagen redimensionada y lista para ser subida: ${fileName}`);
-    // Implementa la lógica para subir la imagen redimensionada a Firebase aquí
   }
 }
