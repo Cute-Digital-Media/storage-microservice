@@ -15,7 +15,7 @@ import { ImageEntity } from './domain/image.enity';
     FirebaseModule,
     TypeOrmModule.forFeature([ImageEntity]),
     QueueModule.register({
-      queues: [QueueEnums.ImageSend],
+      queues: [QueueEnums.ImageSend, QueueEnums.ImageDelete],
       flows: [],
     }),
   ],

@@ -6,19 +6,14 @@ import {
 } from '@nestjs/common';
 import { Storage } from '@google-cloud/storage';
 import { Queue } from 'bullmq';
-import { InjectImageSendyQueue } from 'src/_shared/queue/infrastructure/inject-queue.decorator';
+import { InjectImageQueue } from 'src/_shared/queue/infrastructure/inject-queue.decorator';
 import { queueOpsEnums } from 'src/_shared/queue/domain/queue-ops-enum.interface';
 import { UploadImageDto } from '../domain/upload-image.dto';
 import { SearchImageDto } from '../domain/search-image.dto';
 import { Payload } from 'src/_shared/domain/request-user';
 import { ImageEntity } from '../domain/image.enity';
 import { BaseService } from 'src/_shared/aplication/base-service.service';
-import {
-  FindManyOptions,
-  FindOneOptions,
-  FindOptionsWhere,
-  Repository,
-} from 'typeorm';
+import { FindOneOptions, FindOptionsWhere, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOneImageDto } from '../domain/find-one.dto';
 import { FindAllDto } from '../domain/find.dto';
@@ -28,7 +23,8 @@ export class ImagesService extends BaseService<ImageEntity> {
 
   constructor(
     @Inject('FIREBASE_ADMIN') private firebaseApp,
-    @InjectImageSendyQueue() private imageSendyQueue: Queue,
+    @InjectImageQueue() private imageQueue: Queue,
+
     @InjectRepository(ImageEntity)
     private readonly userRepository: Repository<ImageEntity>,
   ) {
@@ -42,12 +38,12 @@ export class ImagesService extends BaseService<ImageEntity> {
     uploadImageDto: UploadImageDto,
     payload: Payload,
   ): Promise<string> {
-    await this.imageSendyQueue.add(queueOpsEnums.Send, {
+    await this.imageQueue.add(queueOpsEnums.Send, {
       file: file,
       dto: uploadImageDto,
       payload: payload,
     });
-    return 'En proceso de redimensionamiento y subida';
+    return 'In the process of resizing and uploading';
   }
 
   async findOneImage(filter: FindOneImageDto) {
@@ -125,23 +121,33 @@ export class ImagesService extends BaseService<ImageEntity> {
     });
     if (!urls.length) {
       // Verifica si se encontro alguna imagen con ese prefijo
-      throw new NotFoundException('Imagen no encontrada'); // Lanza una excepción si no existe
+      throw new NotFoundException('Image not found'); // Lanza una excepción si no existe
     }
     return urls;
   }
 
-  async deleteFile(fileName: string, filePath: string): Promise<boolean> {
+  async deleteFile(fileName: string, folderPath: string): Promise<boolean> {
     try {
       const bucket = this.storage.bucket(
         this.firebaseApp.options.storageBucket,
       );
-      const file = bucket.file(`${filePath}/${fileName}`);
+      const file = bucket.file(`${folderPath}/${fileName}`);
 
-      await file.delete();
+      const ds = await file.delete();
       return true;
     } catch (error) {
       console.error('Error deleting file:', error);
       return false;
     }
+  }
+
+  async deleteImage(id: number): Promise<string> {
+    const image = await this.findOne({ where: { id } });
+    await this.imageQueue.add(queueOpsEnums.Delete, {
+      id,
+      fileName: image.file_name,
+      folderPath: image.folder_path,
+    });
+    return 'In the process of resizing and uploading';
   }
 }

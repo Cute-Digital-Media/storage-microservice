@@ -9,6 +9,7 @@ import {
   Body,
   Request,
   Query,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ImagesService } from '../aplication/images.service';
@@ -46,12 +47,8 @@ export class ImagesController {
     return this.imageService.findAllImage(filter);
   }
 
-  @Delete(':fileName')
-  async deleteImage(
-    @Param('fileName') fileName: string,
-    @Body('filePath') filePath: string,
-  ): Promise<boolean> {
-    console.log(filePath);
-    return await this.imageService.deleteFile(fileName, filePath);
+  @Delete('fileName/:id')
+  async deleteImage(@Param('id', ParseIntPipe) id: number): Promise<string> {
+    return await this.imageService.deleteImage(id);
   }
 }

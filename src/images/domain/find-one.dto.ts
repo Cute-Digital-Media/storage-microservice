@@ -1,5 +1,5 @@
 import { IsOneOfTwoFields } from 'src/_shared/validator/Is-one-of-two-fields.validator';
-import { IsOptional, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class FindOneImageDto {
@@ -8,8 +8,8 @@ export class FindOneImageDto {
     example: '1',
   })
   @IsOptional()
-  @IsString()
-  id?: string;
+  @IsNumber()
+  id?: number;
 
   @ApiPropertyOptional({
     description: 'Folder Name',

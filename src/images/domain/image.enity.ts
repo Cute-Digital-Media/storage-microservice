@@ -6,9 +6,9 @@ export class ImageEntity {
   @PrimaryGeneratedColumn()
   @ApiProperty({
     description: 'Unique identifier for the file entity',
-    example: 'a3e95e9c-72be-4d89-a032-abc123def456',
+    example: '1',
   })
-  id: string;
+  id: number;
 
   @Column({ type: 'uuid' })
   @ApiProperty({

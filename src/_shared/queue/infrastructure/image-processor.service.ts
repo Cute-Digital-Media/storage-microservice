@@ -4,7 +4,10 @@ import { Job } from 'bullmq';
 import { WorkerHostProcessor } from './worker-host.process';
 import { queueOpsEnums } from '../domain/queue-ops-enum.interface';
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { IImageJobData } from '../domain/Image-job-data.inerface';
+import {
+  IImageSendJobData,
+  IImageDeleteJobData,
+} from '../domain/Image-job-data.inerface';
 import { ImagesService } from 'src/images/aplication/images.service';
 import { IFirabase } from '../domain/firebase.interface';
 import { QueueEnums } from '../domain/queue-enum.enum';
@@ -18,10 +21,12 @@ export class SendImageProcessor extends WorkerHostProcessor {
   ) {
     super();
   }
-  async process(job: Job<IImageJobData, number, string>): Promise<IFirabase> {
-    const { file, payload, dto } = job.data;
+  async process(
+    job: Job<IImageSendJobData | IImageDeleteJobData, number, string>,
+  ): Promise<IFirabase | boolean> {
     switch (job.name) {
       case queueOpsEnums.Send: {
+        const { file, payload, dto } = job.data as IImageSendJobData;
         const { url, fileName, folderPath }: IFirabase =
           await this.imageProcessing.handleResizeAndSend(
             file,
@@ -39,6 +44,19 @@ export class SendImageProcessor extends WorkerHostProcessor {
         });
 
         return { url, fileName, folderPath };
+      }
+      case queueOpsEnums.Delete: {
+        const { fileName, folderPath, id } = job.data as IImageDeleteJobData;
+        if (await this.imagesService.deleteFile(fileName, folderPath)) {
+          try {
+            await this.imagesService.delete({ id });
+          } catch {
+            console.log(
+              'Error deleting photo. Someone else did it before the action was completed',
+            );
+          }
+          return true;
+        }
       }
     }
     throw new BadRequestException(`Unknown job name: ${job.name}`);
