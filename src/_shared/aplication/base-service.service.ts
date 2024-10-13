@@ -16,6 +16,8 @@ import {
   ObjectId,
 } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
+import { PaginationDto } from '../domain/pagination.dto';
+import { PaginatedResponse } from '../domain/paginationResponse.dto';
 
 export abstract class BaseService<T> {
   errorMap: { [key: string]: HttpException } = {
@@ -69,13 +71,44 @@ export abstract class BaseService<T> {
 
   async findAll(
     optionsOrQueryBuilder?: FindManyOptions<T> | SelectQueryBuilder<T>,
-  ): Promise<T[]> {
+    paginationOptions?: PaginationDto,
+  ): Promise<PaginatedResponse<T>> {
     try {
+      const page = paginationOptions?.page;
+      const limit = paginationOptions?.limit;
+      const skip = (page - 1) * limit;
+  
+      let data: T[];
+      let total: number;
+  
       if (optionsOrQueryBuilder instanceof SelectQueryBuilder) {
-        return await optionsOrQueryBuilder.getMany();
+        total = await optionsOrQueryBuilder.getCount();
+        data = await optionsOrQueryBuilder.skip(skip).take(limit).getMany();
       } else {
-        return await this.repository.find(optionsOrQueryBuilder);
+        total = await this.repository.count(optionsOrQueryBuilder);
+        data = await this.repository.find({
+          ...optionsOrQueryBuilder,
+          skip,
+          take: limit,
+        });
       }
+      const totalPages = Math.ceil(total / limit);
+      const currentPage = Math.floor(skip / page) + 1;
+      return {
+        data,
+        pageInfo: {
+          currentPage,
+          totalPages,
+          totalResults: total,
+        },
+      };
+  
+      // return {
+      //   data,
+      //   total,
+      //   page,
+      //   limit,
+      // };
     } catch (error) {
       const exception = this.errorMap[error.code];
       if (exception) throw exception;

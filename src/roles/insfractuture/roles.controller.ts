@@ -7,10 +7,13 @@ import {
   Body,
   Param,
   ParseIntPipe,
+  Query,
 } from '@nestjs/common';
 import { CreateRoleDto, UpdateRoleDto } from '../domain/role.dto';
 import { RolesService } from '../application/roles.service';
 import { Role } from '../domain/role.enity';
+import { PaginatedResponse } from 'src/_shared/domain/paginationResponse.dto';
+import { PaginationDto } from 'src/_shared/domain/pagination.dto';
 
 @Controller('roles')
 export class RoleController {
@@ -22,8 +25,8 @@ export class RoleController {
   }
 
   @Get()
-  async findAll(): Promise<Role[]> {
-    return this.roleService.findAll();
+  async findAll(@Query() pagination: PaginationDto): Promise<PaginatedResponse<Role>> {
+    return this.roleService.findAll(undefined, pagination);
   }
 
   @Get(':id')

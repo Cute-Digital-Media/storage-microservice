@@ -29,7 +29,6 @@ export class AppService implements OnModuleInit {
     }
     const userName = process.env.ADMIN_NAME;
     const userEmail = process.env.ADMIN_EMAIL;
-    const sdsd = process.env.TENANT_ID;
     try {
       await this.usersService.findOne({
         where: { username: userName, email: userEmail },
@@ -38,7 +37,7 @@ export class AppService implements OnModuleInit {
       await this.usersService.save({
         username: userName,
         password: process.env.ADMIN_PASSWORD,
-        email: process.env.ADMIN_EMAIL,
+        email: userEmail,
         tenantId: process.env.TENANT_ID,
         role: role,
       });
