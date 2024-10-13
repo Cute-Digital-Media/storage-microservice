@@ -5,18 +5,21 @@ import {
   UploadedFile,
   Get,
   Param,
-  NotFoundException,
   Delete,
   Body,
   Request,
+  Query,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ImagesService } from '../aplication/images.service';
 import { UploadImageDto } from '../domain/upload-image.dto';
 import { RequestUser } from 'src/_shared/domain/request-user';
-import { SearchImageDto } from '../domain/search-image.dto';
+import { FindOneImageDto } from '../domain/find-one.dto';
+import { Image } from '../domain/image.enity';
+import { FindAllDto } from '../domain/find.dto';
+import { PaginatedResponse } from 'src/_shared/domain/paginationResponse.dto';
 
-@Controller('image')
+@Controller('images')
 export class ImagesController {
   constructor(private readonly imageService: ImagesService) {}
 
@@ -27,24 +30,19 @@ export class ImagesController {
     @Body() uploadImageDto: UploadImageDto,
     @Request() req: RequestUser,
   ): Promise<string> {
-    return await this.imageService.uploadImage(
-      file,
-      uploadImageDto,
-      req.user
-    );
+    return await this.imageService.uploadImage(file, uploadImageDto, req.user);
   }
 
-  @Get(':fileName')
-  async getSingleImageUrl(@Param('fileName') fileName: string): Promise<string> {
-    try {
-      const urls = await this.imageService.checkFileExists(fileName);
-      return urls;
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw new NotFoundException(error.message);
-      }
-      throw error; 
-    }
+  @Get('findOne')
+  async findOne(@Query() filter: FindOneImageDto): Promise<Image> {
+    return this.imageService.findOneImage(filter);
+  }
+
+  @Get('findAll')
+  async findAll(
+    @Query() filter: FindAllDto,
+  ): Promise<PaginatedResponse<Image>> {
+    return this.imageService.findAllImage(filter);
   }
 
   @Delete(':fileName')

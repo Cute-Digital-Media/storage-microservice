@@ -1,4 +1,9 @@
-import { Injectable, Inject, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  Inject,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { Storage } from '@google-cloud/storage';
 import { Queue } from 'bullmq';
 import { InjectImageSendyQueue } from 'src/_shared/queue/infrastructure/inject-queue.decorator';
@@ -8,8 +13,15 @@ import { SearchImageDto } from '../domain/search-image.dto';
 import { Payload } from 'src/_shared/domain/request-user';
 import { Image } from '../domain/image.enity';
 import { BaseService } from 'src/_shared/aplication/base-service.service';
-import { Repository } from 'typeorm';
+import {
+  FindManyOptions,
+  FindOneOptions,
+  FindOptionsWhere,
+  Repository,
+} from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { FindOneImageDto } from '../domain/find-one.dto';
+import { FindAllDto } from '../domain/find.dto';
 @Injectable()
 export class ImagesService extends BaseService<Image> {
   private storage: Storage;
@@ -36,6 +48,44 @@ export class ImagesService extends BaseService<Image> {
       payload: payload,
     });
     return 'En proceso de redimensionamiento y subida';
+  }
+
+  async findOneImage(filter: FindOneImageDto) {
+    const { id, folderName } = filter;
+
+    if (!id && !folderName) {
+      throw new BadRequestException('Either id or name must be provided');
+    }
+
+    const options: FindOneOptions<Image> = {
+      where: {},
+    };
+
+    if (id) {
+      options.where = { ...options.where, id };
+    }
+    if (folderName) {
+      options.where = { ...options.where, folder_name: folderName };
+    }
+
+    return this.findOne(options);
+  }
+
+  async findAllImage(filter: FindAllDto) {
+    const { tenantId, userId, folderName, ...pagination } = filter;
+    const where: FindOptionsWhere<Image> = {};
+
+    if (tenantId) {
+      where.tenant_id = tenantId;
+    }
+    if (userId) {
+      where.user_id = userId;
+    }
+    if (folderName) {
+      where.folder_name = folderName;
+    }
+
+    return this.findAll({where}, pagination);
   }
 
   async checkFileExists(filePath: string): Promise<any> {
