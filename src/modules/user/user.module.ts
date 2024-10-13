@@ -3,10 +3,27 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from './infra/entity/user.entity';
 import { UserRepository } from './infra/repository/user.repository';
 import { UserMapper } from './infra/mapper/user.mapper';
+import { UserService } from './user.service';
+import { UserController } from './user.controller';
+import { UserCreateUseCase } from './app/use-cases/user.create.use-case';
+import { UserFindByEmailUseCase } from './app/use-cases/user.findByEmail.use-case';
 
 @Module({
   imports: [TypeOrmModule.forFeature([UserEntity])],
-  providers: [UserRepository, UserMapper],
-  exports: [UserRepository],
+  providers: [
+    UserRepository,
+    UserMapper,
+    UserService,
+    UserCreateUseCase,
+    UserFindByEmailUseCase,
+  ],
+  exports: [
+    UserRepository,
+    UserMapper,
+    UserService,
+    UserCreateUseCase,
+    UserFindByEmailUseCase
+  ],
+  controllers: [UserController],
 })
 export class UserModule {}

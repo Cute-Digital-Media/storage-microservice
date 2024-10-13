@@ -5,9 +5,10 @@ import { UserModule } from './modules/user/user.module';
 import { TypeormModule } from './modules/config/typeorm/typeorm.module';
 import { EnvModule } from './modules/config/env/env.module';
 import { ImagesModule } from './modules/images/images.module';
+import { AuthModule } from './modules/config/auth/auth.module';
 
 @Module({
-  imports: [UserModule, TypeormModule, EnvModule, ImagesModule],
+  imports: [UserModule, TypeormModule, EnvModule, ImagesModule, AuthModule],
   controllers: [AppController],
   providers: [AppService],
 })

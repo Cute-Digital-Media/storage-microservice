@@ -6,7 +6,6 @@ import {
   PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
-
 @Entity('users')
 export class UserEntity {
   @PrimaryColumn('uuid')
@@ -23,4 +22,5 @@ export class UserEntity {
   updatedAt: Date;
   @DeleteDateColumn({ name: 'deletedAt' })
   deletedAt: Date;
+
 }
