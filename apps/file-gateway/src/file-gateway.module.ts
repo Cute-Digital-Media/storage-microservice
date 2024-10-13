@@ -8,7 +8,10 @@ import { MapperProfiles } from './infrastructure/mappers/profiles/mappers.profil
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Persistence } from './infrastructure/persistence/persistence';
 import { Repositories } from './infrastructure/repositories/repositories';
+import { EnvVarsAccessor } from 'libs/common/configs/env-vars-accessor';
+import { config } from 'dotenv';
 
+config();
 @Module({
   imports: [
     CommonModule,
@@ -17,11 +20,11 @@ import { Repositories } from './infrastructure/repositories/repositories';
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',               
-      port: 5432,
-      username: 'tu_usuario',
-      password: 'tu_contraseña',       
-      database: 'nombre_bd',    
+      host: EnvVarsAccessor.DB_HOST,               
+      port: +EnvVarsAccessor.DB_HOST,
+      username: EnvVarsAccessor.DB_USER_NAME,
+      password: EnvVarsAccessor.DB_PASSWORD,       
+      database: 'file-gateway',    
       entities: Persistence,
       synchronize: true,
       logging: true,                   

@@ -1,6 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { FileGatewayModule } from './file-gateway.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { EnvVarsAccessor } from 'libs/common/configs/env-vars-accessor';
+import { config } from 'dotenv';
 
 async function bootstrap() {
 
@@ -25,7 +27,7 @@ async function bootstrap() {
 
   await app.startAllMicroservices();
   // get port from envs 
-  await app.listen(3000);
+  await app.listen(EnvVarsAccessor.MS_PORT);
   console.log(`FileGateway microservice is running on: ${await app.getUrl()}`);
 }
 
