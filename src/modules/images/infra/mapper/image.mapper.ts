@@ -5,13 +5,13 @@ import { v4 as uuidv4 } from 'uuid';
 
 export class ImageMapper implements IImageMapper {
   toDomain(entity: ImageEntity): ImageDomain {
-    const id = uuidv4();
-    return new ImageDomain(id, entity.type, entity.url);
+    return new ImageDomain(entity.id, entity.type, entity.url);
   }
 
   toEntity(domain: ImageDomain): Partial<ImageEntity> {
+    const id = domain.id ? domain.id : uuidv4();
     const props = {
-      id: domain.id,
+      id,
       type: domain.type,
       url: domain.url,
     };
