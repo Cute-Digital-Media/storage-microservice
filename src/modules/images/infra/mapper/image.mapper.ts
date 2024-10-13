@@ -9,9 +9,8 @@ export class ImageMapper implements IImageMapper {
   }
 
   toEntity(domain: ImageDomain): Partial<ImageEntity> {
-    const id = domain.id ? domain.id : uuidv4();
     const props = {
-      id,
+      id: domain.id,
       type: domain.type,
       url: domain.url,
     };
