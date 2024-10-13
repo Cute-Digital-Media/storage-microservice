@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Post,
+  Req,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -36,8 +37,15 @@ export class ImagesController {
   async uploadFile(
     @UploadedFile(ResizeImagePipe) resisedImageData: ImageDto,
     @Body() data: ImageDto,
+    @Req() request: Request,
   ) {
-    data = { ...data, ...resisedImageData, uploadDate: new Date() };
+    const { user_id, tenant } = request['user'];
+    data = {
+      ...data,
+      ...resisedImageData,
+      uploadDate: new Date(),
+      folderName: `${tenant}/${user_id}/${data.folderName}`,
+    };
     return await this.imagesService.uploadImage(data);
   }
 }
