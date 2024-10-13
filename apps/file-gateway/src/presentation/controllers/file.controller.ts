@@ -1,15 +1,19 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, NotImplementedException } from '@nestjs/common';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateFileDto } from 'apps/file-gateway/src/application/features/file/commands/create/file.create.dto.command';
 import { UpdateFileDto } from 'apps/file-gateway/src/application/features/file/commands/update/file.update.dto';
+import { CreateFileCommand } from '../../application/features/file/commands/create/file.create.command';
 
 @Controller('file')
 export class FileController {
   constructor(
+    private readonly queryBus: QueryBus, 
+    private readonly commandBus: CommandBus
   ) {}
 
   @Post()
-  create(@Body() createFileDto: CreateFileDto) {
-    throw new NotImplementedException()
+  async create(@Body() createFileDto: CreateFileDto) {
+    return await this.commandBus.execute(new CreateFileCommand(createFileDto,"userid"))
   }
 
   @Get()

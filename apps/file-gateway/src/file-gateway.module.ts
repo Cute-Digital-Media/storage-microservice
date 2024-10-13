@@ -7,9 +7,11 @@ import { classes } from '@automapper/classes';
 import { MapperProfiles } from './infrastructure/mappers/profiles/mappers.profiles';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Persistence } from './infrastructure/persistence/persistence';
-import { Repositories } from './infrastructure/repositories/repositories';
+import { PersistenceEntities, RepositoryProviders } from './infrastructure/repositories/repositories';
 import { EnvVarsAccessor } from 'libs/common/configs/env-vars-accessor';
 import { config } from 'dotenv';
+import { FileCommandHandlers } from './application/features/file/commands/file.commands';
+import { FileQueries } from './application/features/file/queries/file.queries';
 
 config();
 @Module({
@@ -29,12 +31,15 @@ config();
       synchronize: true,
       logging: true,                   
     }),
-    TypeOrmModule.forFeature(Repositories),
+    TypeOrmModule.forFeature(PersistenceEntities),
   ],
   controllers: FileGateWayControllers,
   providers: [
     ...ApplicationServices, 
-    ...MapperProfiles 
+    ...MapperProfiles,
+    ...FileCommandHandlers, 
+    ...FileQueries, 
+    ...RepositoryProviders 
   ],
 })
 export class FileGatewayModule {}

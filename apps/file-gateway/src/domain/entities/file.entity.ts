@@ -1,4 +1,8 @@
+import { AutoMap } from "@automapper/classes";
+
 export class FileEntity 
 {
-    filename: string;
+    @AutoMap()
+    public fileName: string
+
 }
