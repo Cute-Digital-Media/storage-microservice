@@ -11,8 +11,8 @@ export class UserDomain {
     this.password = password;
   }
 
-  public static create(id: string = null, name: string, email: string, password: string): UserDomain {
-    id = id ? id : uuidv4();
+  public static create( name: string, email: string, password: string, id?: string): UserDomain {
+    id = id ?? uuidv4();
     return new UserDomain(id, name, email, password);
   }
 }

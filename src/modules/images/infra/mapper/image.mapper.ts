@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 export class ImageMapper implements IImageMapper {
   toDomain(entity: ImageEntity): ImageDomain {
-    return new ImageDomain(entity.id, entity.type, entity.url);
+    return ImageDomain.create( entity.type, entity.url,entity.id,);
   }
 
   toEntity(domain: ImageDomain): Partial<ImageEntity> {

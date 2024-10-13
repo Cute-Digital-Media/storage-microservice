@@ -10,8 +10,8 @@ export class ImageDomain {
     this.url = url;
   }
 
-  public static create(id: string = null, type: ImageTypesEnum, url: string): ImageDomain {
-    id = id ? id : uuidv4();
+  public static create( type: ImageTypesEnum, url: string, id?: string): ImageDomain {
+    id = id ?? uuidv4();
     return new ImageDomain(id, type, url);
   }
 }

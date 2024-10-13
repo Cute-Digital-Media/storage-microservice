@@ -3,7 +3,7 @@ import { UserDomain } from '../../domain/user.domain';
 import { IUserMapper } from './user.mapper.interface';
 export class UserMapper implements IUserMapper {
   toDomain(user: UserEntity): UserDomain {
-    return UserDomain.create(user.id, user.name, user.email, user.password);
+    return UserDomain.create( user.name, user.email, user.password, user.id);
   }
 
   toEntity(user: UserDomain): Partial<UserEntity> {
