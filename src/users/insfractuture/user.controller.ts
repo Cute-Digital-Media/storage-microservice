@@ -6,11 +6,13 @@ import {
   Delete,
   Body,
   Param,
+  Request,
   ParseIntPipe,
 } from '@nestjs/common';
 import { User } from '../domain/user.entity';
 import { CreateUserDto, UpdateUserDto } from '../domain/user.dto';
 import { UsersService } from '../application/users.service';
+import { RequestUser } from 'src/_shared/domain/request-user';
 
 @Controller('users')
 export class UserController {
@@ -18,11 +20,11 @@ export class UserController {
 
   @Post()
   async create(@Body() createUserDto: CreateUserDto): Promise<User> {
-    return this.userService.save(createUserDto);
+    return this.userService.createUser(createUserDto);
   }
 
   @Get()
-  async findAll(): Promise<User[]> {
+  async findAll(@Request() req: RequestUser): Promise<User[]> {
     return this.userService.findAll();
   }
 

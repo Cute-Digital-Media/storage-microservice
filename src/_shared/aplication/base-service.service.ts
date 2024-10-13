@@ -1,4 +1,9 @@
-import { NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  HttpException,
+  NotFoundException,
+} from '@nestjs/common';
 import {
   DeepPartial,
   FindOptionsWhere,
@@ -13,13 +18,27 @@ import {
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 export abstract class BaseService<T> {
+  errorMap: { [key: string]: HttpException } = {
+    '23505': new ConflictException(
+      'Duplicate key value violates unique constraint',
+    ),
+    '23503': new BadRequestException('Foreign key violation'),
+    '23502': new BadRequestException(
+      'Null value in column violates not-null constraint',
+    ),
+    '23514': new BadRequestException('Check constraint violation'),
+    '22001': new BadRequestException('Value too long for type'),
+    '22003': new BadRequestException('Numeric value out of range'),
+  };
+
   constructor(protected readonly repository: Repository<T>) {}
 
   async save(entity: DeepPartial<T>): Promise<T> {
     try {
       return await this.repository.save(entity);
     } catch (error) {
-      console.error('Error saving entities:', error);
+      const exception = this.errorMap[error.code];
+      if (exception) throw exception;
       throw error;
     }
   }
@@ -43,6 +62,8 @@ export abstract class BaseService<T> {
       return entity;
     } catch (error) {
       console.error('Error finding entities:', error);
+      const exception = this.errorMap[error.code];
+      if (exception) throw exception;
       throw error;
     }
   }
@@ -58,6 +79,8 @@ export abstract class BaseService<T> {
       }
     } catch (error) {
       console.error('Error finding entities:', error);
+      const exception = this.errorMap[error.code];
+      if (exception) throw exception;
       throw error;
     }
   }
@@ -92,6 +115,8 @@ export abstract class BaseService<T> {
       return await this.repository.increment(where, field, incremental);
     } catch (error) {
       console.error('Error incrementing the field:', error);
+      const exception = this.errorMap[error.code];
+      if (exception) throw exception;
       throw error;
     }
   }
@@ -102,6 +127,8 @@ export abstract class BaseService<T> {
       data = await this.repository.delete(criteria);
     } catch (error) {
       console.error('Error deleting entity:', error);
+      const exception = this.errorMap[error.code];
+      if (exception) throw exception;
       throw error;
     }
     if (!data.affected) throw new NotFoundException('Entity not found');

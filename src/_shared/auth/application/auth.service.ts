@@ -1,5 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { validatePassword } from 'src/_shared/domain/hash';
 import { Payload } from 'src/_shared/domain/request-user';
 import { UsersService } from 'src/users/application/users.service';
 
@@ -11,8 +12,15 @@ export class AuthService {
   ) {}
 
   async signIn(username: string, pass: string) {
-    const user = await this.usersService.findOne({ where: { username } });
-    if (user?.password !== pass) {
+    let user;
+    try {
+      user = await this.usersService.findOne({ where: { username } });
+    } catch (e) {
+      if (e.message === 'Entity not found') throw new UnauthorizedException();
+      throw e;
+    }
+
+    if (!await validatePassword(pass, user.password)) {
       throw new UnauthorizedException();
     }
     const payload: Payload = {

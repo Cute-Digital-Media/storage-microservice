@@ -15,7 +15,7 @@ export class Role {
     example: 'Admin',
     description: 'Name of the Role',
   })
-  @Column({ unique: true })
+  @Column({ unique: true, nullable: false})
   name: string;
 
   @ApiProperty({
