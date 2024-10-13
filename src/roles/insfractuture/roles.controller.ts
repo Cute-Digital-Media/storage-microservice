@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { CreateRoleDto, UpdateRoleDto } from '../domain/role.dto';
 import { RolesService } from '../application/roles.service';
-import { Role } from '../domain/role.enity';
+import { RoleEntity } from '../domain/role.enity';
 import { PaginatedResponse } from 'src/_shared/domain/paginationResponse.dto';
 import { PaginationDto } from 'src/_shared/domain/pagination.dto';
 
@@ -20,17 +20,19 @@ export class RoleController {
   constructor(private readonly roleService: RolesService) {}
 
   @Post()
-  async create(@Body() createRoleDto: CreateRoleDto): Promise<Role> {
+  async create(@Body() createRoleDto: CreateRoleDto): Promise<RoleEntity> {
     return this.roleService.save(createRoleDto);
   }
 
   @Get()
-  async findAll(@Query() pagination: PaginationDto): Promise<PaginatedResponse<Role>> {
+  async findAll(
+    @Query() pagination: PaginationDto,
+  ): Promise<PaginatedResponse<RoleEntity>> {
     return this.roleService.findAll(undefined, pagination);
   }
 
   @Get(':id')
-  async findOne(@Param('id', ParseIntPipe) id: number): Promise<Role> {
+  async findOne(@Param('id', ParseIntPipe) id: number): Promise<RoleEntity> {
     return this.roleService.findOne({ where: { id } });
   }
 
@@ -38,7 +40,7 @@ export class RoleController {
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateRoleDto: UpdateRoleDto,
-  ): Promise<Role> {
+  ): Promise<RoleEntity> {
     await this.roleService.update({ id }, updateRoleDto);
     return this.roleService.findOne({ where: { id } });
   }

@@ -10,7 +10,7 @@ import { ImagesService } from 'src/images/aplication/images.service';
 
 @Processor(queueEnums.ImageSend)
 @Injectable()
-export class MathBinaryOperationProcessor extends WorkerHostProcessor {
+export class SendImageProcessor extends WorkerHostProcessor {
   constructor(
     private readonly imageProcessing: ImageProcessing,
     private readonly imagesService: ImagesService,

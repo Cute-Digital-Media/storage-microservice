@@ -1,7 +1,7 @@
 import { flatten } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
-import { Role } from 'src/roles/domain/role.enity';
+import { RoleEntity } from 'src/roles/domain/role.enity';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -10,9 +10,9 @@ import {
   Unique,
 } from 'typeorm';
 
-@Entity()
+@Entity({ name: 'user' })
 @Unique(['username', 'email'])
-export class User {
+export class UserEntity {
   @PrimaryGeneratedColumn()
   @ApiProperty({
     description: 'Unique identifier for the user',
@@ -49,10 +49,10 @@ export class User {
   })
   tenantId: string;
 
-  @ManyToOne(() => Role, (role) => role.users, { nullable: false })
+  @ManyToOne(() => RoleEntity, (role) => role.users, { nullable: false })
   @ApiProperty({
-    description: 'Role assigned to the user',
-    type: () => Role,
+    description: 'RoleEntity assigned to the user',
+    type: () => RoleEntity,
   })
-  role: Role;
+  role: RoleEntity;
 }

@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, Matches } from 'class-validator';
-import { Image } from './image.enity';
+import { ImageEntity } from './image.enity';
 
 type ImageWithout = Omit<
-  Image,
+  ImageEntity,
   'id' | 'tenant_id' | 'user_id' | 'url' | 'full_path' | 'file_name'
 >;
 

@@ -1,8 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 
-@Entity()
-export class Image {
+@Entity({ name: 'images' })
+export class ImageEntity {
   @PrimaryGeneratedColumn()
   @ApiProperty({
     description: 'Unique identifier for the file entity',
@@ -10,42 +10,42 @@ export class Image {
   })
   id: string;
 
-  @Column({ type: 'uuid'})
+  @Column({ type: 'uuid', nullable: true })
   @ApiProperty({
     description: 'Unique identifier for the tenant',
     example: 'a3e95e9c-72be-4d89-a032-abc123def456',
   })
   tenant_id: string;
 
-  @Column()
+  @Column({ nullable: true })
   @ApiProperty({
     description: 'Unique identifier for the user',
     example: 'c3e95e9c-72be-4d89-a032-abc123def456',
   })
   user_id: number;
 
-  @Column()
+  @Column({ nullable: true })
   @ApiProperty({
     description: 'Name of the folder where the file is stored',
     example: 'documents',
   })
   folder_name: string;
 
-  @Column()
+  @Column({ nullable: true })
   @ApiProperty({
     description: 'Full path of the file in the storage system',
     example: '/documents/reports/2024/',
   })
   full_path: string;
 
-  @Column()
+  @Column({ nullable: true })
   @ApiProperty({
     description: 'Name of the file',
     example: 'report.pdf',
   })
   file_name: string;
 
-  @Column()
+  @Column({ nullable: true })
   @ApiProperty({
     description: 'URL to access the file',
     example: 'https://example.com/documents/reports/2024/report.pdf',

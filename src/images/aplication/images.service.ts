@@ -11,7 +11,7 @@ import { queueOpsEnums } from 'src/_shared/queue/domain/queue-ops-enum.interface
 import { UploadImageDto } from '../domain/upload-image.dto';
 import { SearchImageDto } from '../domain/search-image.dto';
 import { Payload } from 'src/_shared/domain/request-user';
-import { Image } from '../domain/image.enity';
+import { ImageEntity } from '../domain/image.enity';
 import { BaseService } from 'src/_shared/aplication/base-service.service';
 import {
   FindManyOptions,
@@ -23,14 +23,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { FindOneImageDto } from '../domain/find-one.dto';
 import { FindAllDto } from '../domain/find.dto';
 @Injectable()
-export class ImagesService extends BaseService<Image> {
+export class ImagesService extends BaseService<ImageEntity> {
   private storage: Storage;
 
   constructor(
     @Inject('FIREBASE_ADMIN') private firebaseApp,
     @InjectImageSendyQueue() private imageSendyQueue: Queue,
-    @InjectRepository(Image)
-    private readonly userRepository: Repository<Image>,
+    @InjectRepository(ImageEntity)
+    private readonly userRepository: Repository<ImageEntity>,
   ) {
     super(userRepository);
 
@@ -57,7 +57,7 @@ export class ImagesService extends BaseService<Image> {
       throw new BadRequestException('Either id or name must be provided');
     }
 
-    const options: FindOneOptions<Image> = {
+    const options: FindOneOptions<ImageEntity> = {
       where: {},
     };
 
@@ -73,7 +73,7 @@ export class ImagesService extends BaseService<Image> {
 
   async findAllImage(filter: FindAllDto) {
     const { tenantId, userId, folderName, ...pagination } = filter;
-    const where: FindOptionsWhere<Image> = {};
+    const where: FindOptionsWhere<ImageEntity> = {};
 
     if (tenantId) {
       where.tenant_id = tenantId;
@@ -85,7 +85,7 @@ export class ImagesService extends BaseService<Image> {
       where.folder_name = folderName;
     }
 
-    return this.findAll({where}, pagination);
+    return this.findAll({ where }, pagination);
   }
 
   async checkFileExists(filePath: string): Promise<any> {

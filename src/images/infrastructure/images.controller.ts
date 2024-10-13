@@ -15,7 +15,7 @@ import { ImagesService } from '../aplication/images.service';
 import { UploadImageDto } from '../domain/upload-image.dto';
 import { RequestUser } from 'src/_shared/domain/request-user';
 import { FindOneImageDto } from '../domain/find-one.dto';
-import { Image } from '../domain/image.enity';
+import { ImageEntity } from '../domain/image.enity';
 import { FindAllDto } from '../domain/find.dto';
 import { PaginatedResponse } from 'src/_shared/domain/paginationResponse.dto';
 
@@ -34,14 +34,14 @@ export class ImagesController {
   }
 
   @Get('findOne')
-  async findOne(@Query() filter: FindOneImageDto): Promise<Image> {
+  async findOne(@Query() filter: FindOneImageDto): Promise<ImageEntity> {
     return this.imageService.findOneImage(filter);
   }
 
   @Get('findAll')
   async findAll(
     @Query() filter: FindAllDto,
-  ): Promise<PaginatedResponse<Image>> {
+  ): Promise<PaginatedResponse<ImageEntity>> {
     return this.imageService.findAllImage(filter);
   }
 

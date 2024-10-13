@@ -10,7 +10,7 @@ import {
   ParseIntPipe,
   Query,
 } from '@nestjs/common';
-import { User } from '../domain/user.entity';
+import { UserEntity } from '../domain/user.entity';
 import { CreateUserDto, UpdateUserDto } from '../domain/user.dto';
 import { UsersService } from '../application/users.service';
 import { RequestUser } from 'src/_shared/domain/request-user';
@@ -22,17 +22,19 @@ export class UserController {
   constructor(private readonly userService: UsersService) {}
 
   @Post()
-  async create(@Body() createUserDto: CreateUserDto): Promise<User> {
+  async create(@Body() createUserDto: CreateUserDto): Promise<UserEntity> {
     return this.userService.createUser(createUserDto);
   }
 
   @Get()
-  async findAll(@Query() pagination: PaginationDto): Promise<PaginatedResponse<User>> {
+  async findAll(
+    @Query() pagination: PaginationDto,
+  ): Promise<PaginatedResponse<UserEntity>> {
     return this.userService.findAll(undefined, pagination);
   }
 
   @Get(':id')
-  async findOne(@Param('id', ParseIntPipe) id: number): Promise<User> {
+  async findOne(@Param('id', ParseIntPipe) id: number): Promise<UserEntity> {
     return this.userService.findOne({ where: { id } });
   }
 
@@ -40,7 +42,7 @@ export class UserController {
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUserDto: UpdateUserDto,
-  ): Promise<User> {
+  ): Promise<UserEntity> {
     await this.userService.update({ id }, updateUserDto);
     return this.userService.findOne({ where: { id } });
   }
