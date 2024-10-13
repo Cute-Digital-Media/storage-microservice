@@ -6,11 +6,12 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { ImageDto } from './dto/image.dto';
 import { ImagesService } from './images.service';
 import { ResizeImagePipe } from './pipes/resize-image.pipe';
 
+@ApiBearerAuth()
 @Controller('images')
 @ApiTags('images')
 export class ImagesController {

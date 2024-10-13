@@ -6,6 +6,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const config = new DocumentBuilder()
+    .addBearerAuth()
     .setTitle('Storage Microservice API')
     .setDescription('The storage microservice API description')
     .setVersion('1.0')
