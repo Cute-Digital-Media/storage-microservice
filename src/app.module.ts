@@ -10,7 +10,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './_shared/auth/application/auth.guard';
 import { AuthModule } from './_shared/auth/auth.module';
-import { ImageModule } from './images/images.module';
+import { ImagesModule } from './images/images.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -38,7 +38,7 @@ import { ImageModule } from './images/images.module';
     UsersModule,
     RolesModule,
     AuthModule,
-    ImageModule,
+    ImagesModule,
     queueConfig,
   ],
   controllers: [AppController],

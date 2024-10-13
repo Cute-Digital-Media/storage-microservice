@@ -7,11 +7,13 @@ import { queueEnums } from 'src/_shared/queue/domain/queue-enum.interface';
 import { ImageResizeService } from 'src/_shared/aplication/image-resize.service';
 import { ImageProcessing } from 'src/_shared/queue/infrastructure/image-processing.service';
 import { MathBinaryOperationProcessor } from 'src/_shared/queue/infrastructure/image-processor.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Image } from './domain/image.enity';
 
 @Module({
   imports: [
     FirebaseModule,
-
+    TypeOrmModule.forFeature([Image]),
     QueueModule.register({
       queues: [queueEnums.ImageSend],
       flows: [],
@@ -25,4 +27,4 @@ import { MathBinaryOperationProcessor } from 'src/_shared/queue/infrastructure/i
     MathBinaryOperationProcessor,
   ],
 })
-export class ImageModule {}
+export class ImagesModule {}

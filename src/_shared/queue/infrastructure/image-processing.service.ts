@@ -26,7 +26,7 @@ export class ImageProcessing {
     user_id: number,
     folder_name: string,
     tenantId: string,
-  ) {
+  ):Promise<string> {
     const uuid = uuidv4(); // Genera un UUID único para el nombre del archivo
     const fileName = `${file.originalname}-${uuid}`; // Crea el nombre del archivo
     const bucket = this.storage.bucket(this.firebaseApp.options.storageBucket); // Obtiene el bucket de Firebase
@@ -40,18 +40,12 @@ export class ImageProcessing {
     let processedBuffer: Buffer = file.buffer; // Buffer de la imagen, inicialmente el original
 
     // Intenta redimensionar y optimizar la imagen
-    try {
-      processedBuffer = await this.imageResizeService.resizeAndOptimize(
-        file.buffer,
-        800, // Ancho deseado
-        600, // Alto deseado
-        'webp', // Formato de salida (webp para mejor calidad/tamaño)
-      );
-    } catch (error) {
-      console.error('Error al procesar la imagen:', error);
-      // Maneja el error como desees, por ejemplo, subir la imagen original sin procesar.
-      // En este caso, simplemente se continúa con el buffer original.
-    }
+    processedBuffer = await this.imageResizeService.resizeAndOptimize(
+      file.buffer,
+      800, // Ancho deseado
+      600, // Alto deseado
+      'webp', // Formato de salida (webp para mejor calidad/tamaño)
+    );
 
     // Crea un stream para subir el archivo
     const blobStream = fileUpload.createWriteStream({

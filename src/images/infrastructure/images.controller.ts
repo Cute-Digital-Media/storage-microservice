@@ -1,4 +1,3 @@
-// image.controller.ts
 import {
   Controller,
   Post,
@@ -7,32 +6,53 @@ import {
   Get,
   Param,
   NotFoundException,
+  Delete,
+  Body,
+  Request,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ImagesService } from '../aplication/images.service';
+import { UploadImageDto } from '../domain/upload-image.dto';
+import { RequestUser } from 'src/_shared/domain/request-user';
+import { SearchImageDto } from '../domain/search-image.dto';
 
 @Controller('image')
 export class ImagesController {
   constructor(private readonly imageService: ImagesService) {}
 
   @Post('upload')
-  @UseInterceptors(FileInterceptor('file')) // Intercepta el archivo subido con el nombre 'image'
-  async uploadImage(@UploadedFile() file: Express.Multer.File): Promise<any> {
-    return await this.imageService.uploadImage(file); // Llama al servicio para subir la imagen
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadImage(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() uploadImageDto: UploadImageDto,
+    @Request() req: RequestUser,
+  ): Promise<string> {
+    return await this.imageService.uploadImage(
+      file,
+      uploadImageDto,
+      req.user
+    );
   }
 
-  @Get(':fileName') // Ruta para obtener la URL de la imagen por nombre de archivo
-  async getImageUrl(
-    @Param('fileName') fileName: string,
-  ): Promise<{ url: string }> {
+  @Get(':fileName')
+  async getSingleImageUrl(@Param('fileName') fileName: string): Promise<string> {
     try {
-      const url = await this.imageService.getImageUrl(fileName);
-      return { url };
+      const urls = await this.imageService.checkFileExists(fileName);
+      return urls;
     } catch (error) {
       if (error instanceof NotFoundException) {
-        throw new NotFoundException(error.message); // Relanza la excepción si la imagen no se encuentra
+        throw new NotFoundException(error.message);
       }
-      throw error; // Relanza cualquier otra excepción
+      throw error; 
     }
+  }
+
+  @Delete(':fileName')
+  async deleteImage(
+    @Param('fileName') fileName: string,
+    @Body('filePath') filePath: string,
+  ): Promise<boolean> {
+    console.log(filePath);
+    return await this.imageService.deleteFile(fileName, filePath);
   }
 }
