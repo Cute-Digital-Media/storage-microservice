@@ -3,19 +3,19 @@ import { Type } from 'class-transformer';
 import { IsInt, IsOptional, IsString } from 'class-validator';
 
 export class ImageFilter {
+  @ApiPropertyOptional()
   @IsOptional()
   @IsString()
-  @ApiPropertyOptional()
   tenant?: string;
 
+  @ApiPropertyOptional()
   @IsOptional()
   @IsInt()
-  @ApiPropertyOptional()
   @Type(() => Number)
   userId?: number;
 
+  @ApiPropertyOptional()
   @IsOptional()
   @IsString()
-  @ApiPropertyOptional()
   folderName?: string;
 }

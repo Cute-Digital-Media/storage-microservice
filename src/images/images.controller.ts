@@ -19,8 +19,8 @@ import {
 } from '@nestjs/swagger';
 import { Public } from '../auth/decorators/public.decorator';
 import { ImageDto } from './dto/image.dto';
-import { ImageFilter } from './filters/image.filter';
 import { ImagesService } from './images.service';
+import { PaginationDto } from './pagination/pagination.dto';
 import { ResizeImagePipe } from './pipes/resize-image.pipe';
 
 @ApiBearerAuth()
@@ -30,7 +30,7 @@ export class ImagesController {
   constructor(private readonly imagesService: ImagesService) {}
 
   @Get()
-  async getAllImages(@Query() query?: ImageFilter) {
+  async getAllImages(@Query() query?: PaginationDto) {
     return await this.imagesService.getAllImages(query);
   }
 
