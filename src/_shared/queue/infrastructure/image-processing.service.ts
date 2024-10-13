@@ -1,6 +1,7 @@
 import { Inject } from '@nestjs/common';
 import { ImageResizeService } from 'src/_shared/aplication/image-resize.service';
 import { v4 as uuidv4 } from 'uuid';
+import { IFirabase } from '../domain/firebase.interface';
 
 export class ImageProcessing {
   private storage: Storage;
@@ -14,10 +15,8 @@ export class ImageProcessing {
 
   async createFolder(folderName: string, bucket: any): Promise<string> {
     const folderPath = `${folderName}`;
-    console.log(folderPath);
 
     const result = await bucket.file(folderPath); //.save(null);
-    console.log(result);
     return folderPath;
   }
 
@@ -26,7 +25,7 @@ export class ImageProcessing {
     user_id: number,
     folder_name: string,
     tenantId: string,
-  ):Promise<string> {
+  ): Promise<IFirabase> {
     const uuid = uuidv4(); // Genera un UUID único para el nombre del archivo
     const fileName = `${file.originalname}-${uuid}`; // Crea el nombre del archivo
     const bucket = this.storage.bucket(this.firebaseApp.options.storageBucket); // Obtiene el bucket de Firebase
@@ -34,7 +33,6 @@ export class ImageProcessing {
       `${tenantId}/${user_id}/${folder_name ? folder_name : ''}`,
       bucket,
     );
-    console.log(folderPath);
     const fileUpload = bucket.file(`${folderPath}/${fileName}`); // Crea un archivo en el bucket
 
     let processedBuffer: Buffer = file.buffer; // Buffer de la imagen, inicialmente el original
@@ -69,6 +67,6 @@ export class ImageProcessing {
       expires: '03-09-2491', // Fecha de expiración de la URL
     });
 
-    return url; // Retorna la URL del archivo
+    return { url, fileName, folderPath };
   }
 }

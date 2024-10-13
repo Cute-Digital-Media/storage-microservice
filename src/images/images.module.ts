@@ -3,7 +3,7 @@ import { ImagesController } from './infrastructure/images.controller';
 import { ImagesService } from './aplication/images.service';
 import { FirebaseModule } from 'src/_shared/firabase/firabase.module';
 import { QueueModule } from 'src/_shared/queue/queue-board.module';
-import { queueEnums } from 'src/_shared/queue/domain/queue-enum.interface';
+import { QueueEnums } from 'src/_shared/queue/domain/queue-enum.enum';
 import { ImageResizeService } from 'src/_shared/aplication/image-resize.service';
 import { ImageProcessing } from 'src/_shared/queue/infrastructure/image-processing.service';
 import { SendImageProcessor } from 'src/_shared/queue/infrastructure/image-processor.service';
@@ -15,7 +15,7 @@ import { ImageEntity } from './domain/image.enity';
     FirebaseModule,
     TypeOrmModule.forFeature([ImageEntity]),
     QueueModule.register({
-      queues: [queueEnums.ImageSend],
+      queues: [QueueEnums.ImageSend],
       flows: [],
     }),
   ],

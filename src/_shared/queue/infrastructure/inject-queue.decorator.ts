@@ -1,4 +1,4 @@
 import { InjectQueue } from '@nestjs/bullmq';
-import { queueEnums } from '../domain/queue-enum.interface';
+import { QueueEnums } from '../domain/queue-enum.enum';
 
-export const InjectImageSendyQueue = () => InjectQueue(queueEnums.ImageSend);
+export const InjectImageSendyQueue = () => InjectQueue(QueueEnums.ImageSend);
