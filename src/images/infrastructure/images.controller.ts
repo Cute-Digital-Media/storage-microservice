@@ -18,13 +18,14 @@ import { FindOneImageDto } from '../domain/find-one.dto';
 import { ImageEntity } from '../domain/image.enity';
 import { FindAllDto } from '../domain/find.dto';
 import { PaginatedResponse } from 'src/_shared/domain/paginationResponse.dto';
+import { multerConfig } from '../domain/multer.config';
 
 @Controller('images')
 export class ImagesController {
   constructor(private readonly imageService: ImagesService) {}
 
   @Post('upload')
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FileInterceptor('file', multerConfig))
   async uploadImage(
     @UploadedFile() file: Express.Multer.File,
     @Body() uploadImageDto: UploadImageDto,

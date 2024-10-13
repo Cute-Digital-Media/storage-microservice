@@ -4,7 +4,7 @@ import { ImageEntity } from './image.enity';
 
 type ImageWithout = Omit<
   ImageEntity,
-  'id' | 'tenant_id' | 'user_id' | 'url' | 'full_path' | 'file_name'
+  'id' | 'tenant_id' | 'user_id' | 'url' | 'full_path' | 'file_name'| 'folder_path'
 >;
 
 export class UploadImageDto implements ImageWithout {
