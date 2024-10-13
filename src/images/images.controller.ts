@@ -1,13 +1,23 @@
 import {
+  BadRequestException,
   Body,
   Controller,
+  Get,
   Post,
+  Query,
   Req,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
+import { Public } from '../auth/decorators/public.decorator';
 import { ImageDto } from './dto/image.dto';
 import { ImagesService } from './images.service';
 import { ResizeImagePipe } from './pipes/resize-image.pipe';
@@ -17,6 +27,21 @@ import { ResizeImagePipe } from './pipes/resize-image.pipe';
 @ApiTags('images')
 export class ImagesController {
   constructor(private readonly imagesService: ImagesService) {}
+
+  @Public()
+  @Get()
+  @ApiQuery({ name: 'id', required: false, type: String })
+  @ApiQuery({ name: 'name', required: false, type: String })
+  async getOneImage(@Query('id') id?: string, @Query('name') name?: string) {
+    if (id) {
+      return await this.imagesService.getImageById(+id);
+    } else if (name) {
+      return await this.imagesService.getImageByName(name);
+    }
+    throw new BadRequestException(
+      `You must provide at least one of these arguments: 'id' or 'name'`,
+    );
+  }
 
   @Post('upload')
   @ApiConsumes('multipart/form-data')
@@ -34,7 +59,7 @@ export class ImagesController {
     },
   })
   @UseInterceptors(FileInterceptor('file'))
-  async uploadFile(
+  async uploadImage(
     @UploadedFile(ResizeImagePipe) resisedImageData: ImageDto,
     @Body() data: ImageDto,
     @Req() request: Request,
