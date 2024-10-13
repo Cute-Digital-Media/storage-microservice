@@ -1,7 +1,8 @@
-import { BaseEntity, PrimaryGeneratedColumn } from "typeorm";
+import { AuditablePersistenceEntity } from 'libs/common/infrastructure/persistence/auditable.persistence.entity';
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
-export class FilePersistence extends BaseEntity
-{
-    @PrimaryGeneratedColumn('uuid')
-    public id: string;
-} 
+@Entity('file')
+export class FilePersistence  extends AuditablePersistenceEntity{
+    @Column({ type: 'text'})
+    filename: string;
+}
