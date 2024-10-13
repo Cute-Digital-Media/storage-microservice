@@ -9,7 +9,7 @@ export class FirebaseService {
 
   async uploadImage(imageData: ImageDto): Promise<string> {
     const uuid = uuidv4();
-    const filePath = `${imageData.folderName}/${imageData.originalFileName}-${uuid}`;
+    const filePath = `${imageData.tenant}/${imageData.userId}/${imageData.folderName}/${imageData.originalFileName}-${uuid}`;
     const bucket = this.firebaseApp
       .storage()
       .bucket(this.firebaseApp.options.storageBucket);
