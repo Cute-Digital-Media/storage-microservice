@@ -4,6 +4,7 @@ import { ILike, Repository } from 'typeorm';
 import { FirebaseService } from '../firebase/firebase.service';
 import { ImageEntity } from './dto/entities/image.entity';
 import { ImageDto } from './dto/image.dto';
+import { ImageFilter } from './filters/image.filter';
 
 @Injectable()
 export class ImagesService {
@@ -37,5 +38,15 @@ export class ImagesService {
       throw new NotFoundException(`Image with name '${name}' not found`);
     }
     return imageEntity;
+  }
+
+  async getAllImages(filter?: ImageFilter): Promise<ImageEntity[]> {
+    return await this.imageRepository.find({
+      where: {
+        ...(filter?.tenant && { tenant: filter.tenant }),
+        ...(filter?.userId && { userId: filter.userId }),
+        ...(filter?.folderName && { folderName: filter.folderName }),
+      },
+    });
   }
 }

@@ -19,6 +19,7 @@ import {
 } from '@nestjs/swagger';
 import { Public } from '../auth/decorators/public.decorator';
 import { ImageDto } from './dto/image.dto';
+import { ImageFilter } from './filters/image.filter';
 import { ImagesService } from './images.service';
 import { ResizeImagePipe } from './pipes/resize-image.pipe';
 
@@ -28,8 +29,13 @@ import { ResizeImagePipe } from './pipes/resize-image.pipe';
 export class ImagesController {
   constructor(private readonly imagesService: ImagesService) {}
 
-  @Public()
   @Get()
+  async getAllImages(@Query() query?: ImageFilter) {
+    return await this.imagesService.getAllImages(query);
+  }
+
+  @Public()
+  @Get('findOne')
   @ApiQuery({ name: 'id', required: false, type: String })
   @ApiQuery({ name: 'name', required: false, type: String })
   async getOneImage(@Query('id') id?: string, @Query('name') name?: string) {
@@ -69,7 +75,8 @@ export class ImagesController {
       ...data,
       ...resisedImageData,
       uploadDate: new Date(),
-      folderName: `${tenant}/${user_id}/${data.folderName}`,
+      tenant,
+      userId: user_id,
     };
     return await this.imagesService.uploadImage(data);
   }

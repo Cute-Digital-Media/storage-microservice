@@ -6,6 +6,15 @@ export class ImageEntity {
   id?: number;
 
   @Column()
+  folderName: string;
+
+  @Column()
+  tenant: string;
+
+  @Column()
+  userId: number;
+
+  @Column()
   searchableFileName: string;
 
   @Column()
