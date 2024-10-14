@@ -1,4 +1,4 @@
-import { Logger } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 
 export interface ILoggerService 
 {
@@ -9,6 +9,7 @@ export interface ILoggerService
 
 
 // Basic implementation for now, later maybe extend it with Seq or other external logging service 
+@Injectable()
 export class LoggerService extends Logger implements ILoggerService
 {
     constructor() {
