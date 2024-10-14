@@ -1,3 +1,41 @@
+# Proyecto de Microservicio de Imágenes
+
+## Descripción
+
+Este microservicio está diseñado para manejar la carga y gestión de imágenes, utilizando NestJS y PostgreSQL, con integración a Firebase para el almacenamiento.
+
+## Prerrequisitos
+
+- Node.js (versión 20 o superior)
+- PostgreSQL (versión 14 o superior)
+- Cuenta de Firebase
+
+## Variables de Entorno
+
+Asegúrate de crear un archivo `.env` en la raíz del proyecto con las siguientes variables:
+
+```
+# Base de datos
+DATABASE_HOST=localhost
+DATABASE_PORT=5432
+DATABASE_USERNAME=tu_usuario
+DATABASE_PASSWORD=tu_contraseña
+DATABASE_NAME=nombre_de_la_base_de_datos
+
+# Firebase
+FIREBASE_PROJECT_ID=tu_project_id
+FIREBASE_PRIVATE_KEY=tu_private_key
+
+# Otros
+JWT_SECRET=tu_secreto_jwt
+
+
+```
+
+# Firebase
+
+Cuando se inicializa el servicio de firebase debes importar el json con la key que descargas desde FireBase en la web
+
 # Image Storage Microservice
 
 This microservice implements a basic CRUD for uploading, storing, and retrieving images using NestJS. Images are externally stored in Firebase Storage, and the endpoints support file upload, retrieval, and validation.
@@ -10,7 +48,6 @@ This project provides a scalable and efficient image storage microservice, featu
 - **Storage in Firebase Storage**.
 - **Image retrieval** via public URLs.
 - **Security with JWT authentication** to protect access to the endpoints (Mocked data, not real authentication process required).
-
 
 ### Additional Features (Optional)
 
@@ -38,7 +75,7 @@ You should use the following tech stack during this project:
 - TypeORM.
 - PostgreSQL.
 - Redis (optional).
-  
+
 ---
 
 ## Project workflow
@@ -59,22 +96,30 @@ You should use the following tech stack during this project:
    ```bash
    git clone <REPOSITORY_URL>
    cd <PROJECT_NAME>
-   
+
+   ```
+
 2. **Install dependencies**
+
    ```bash
    yarn install
-   
+
+   ```
+
 3. **.env variables**
+
 - You should update this point to include env names needed.
 
 4. **Start the Service**
-    ```bash
-    yarn start:dev
-    
-6. **Final considerations and recomendations**
+
+   ```bash
+   yarn start:dev
+
+   ```
+
+5. **Final considerations and recomendations**
+
 - Keep it simple.
 - Be organized in your code.
 - Don't forget to provide the necessary environment variable names needed to run and test the project.
 - Good luck :).
-
-   

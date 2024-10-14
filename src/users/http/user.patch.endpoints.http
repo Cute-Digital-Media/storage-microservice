@@ -1,0 +1,7 @@
+PATCH http://localhost:3000/users/update-user
+Content-Type: application/json
+{
+  "id":1,
+  "email": "78@gmail.com"
+
+}

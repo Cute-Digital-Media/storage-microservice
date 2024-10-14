@@ -1,0 +1,6 @@
+DELETE http://localhost:3000/users/delete
+Content-Type: application/json
+{
+    "email":"test234222@gmail.com",
+    "password":"masdasd1234"
+}

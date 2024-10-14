@@ -1,0 +1,8 @@
+POST http://localhost:3000/users/create-user
+Content-Type: application/json
+{
+  "email":"admin@gmail.com",
+  "password":"maXS@sdasd1234",
+  "rol":["User"],
+  "tenant":"ABC"
+}
