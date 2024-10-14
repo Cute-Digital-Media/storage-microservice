@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ILike, Repository } from 'typeorm';
 import { FirebaseService } from '../firebase/firebase.service';
@@ -8,6 +8,8 @@ import { PaginationResultDto } from './pagination/pagination-result.dto';
 import { PaginationDto } from './pagination/pagination.dto';
 @Injectable()
 export class ImagesService {
+  private readonly logger = new Logger(ImagesService.name);
+
   constructor(
     @InjectRepository(ImageEntity)
     private readonly imageRepository: Repository<ImageEntity>,
@@ -17,6 +19,11 @@ export class ImagesService {
   async uploadImage(imageDto: ImageDto): Promise<ImageEntity> {
     imageDto.url = await this.firebaseService.uploadImage(imageDto);
     imageDto.buffer = undefined;
+
+    this.logger.log(
+      `User '${imageDto.userId}' uploaded image '${imageDto.originalFileName}' to folder '${imageDto.tenant}/${imageDto.userId}/${imageDto.folderName}'`,
+    );
+
     return await this.imageRepository.save({
       ...imageDto,
     } as ImageEntity);
