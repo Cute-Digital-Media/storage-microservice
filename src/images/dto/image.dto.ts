@@ -1,10 +1,16 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsDate, IsInt, IsOptional, IsString, IsUrl } from 'class-validator';
 
 export class ImageDto {
   @IsString()
+  @ApiProperty()
   originalFileName: string;
+
+  @IsOptional()
+  @IsString()
+  @ApiPropertyOptional()
+  firebaseFileName?: string;
 
   @IsOptional()
   @IsString()

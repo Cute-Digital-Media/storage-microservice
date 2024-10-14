@@ -21,6 +21,9 @@ export class ImageEntity {
   originalFileName: string;
 
   @Column()
+  firebaseFileName: string;
+
+  @Column()
   uploadDate: Date;
 
   @Column({ default: 0 })
