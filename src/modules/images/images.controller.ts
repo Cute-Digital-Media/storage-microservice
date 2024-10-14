@@ -31,7 +31,7 @@ export class ImagesController {
     UploadFileInterceptor,
   )
   async upload(@UploadedFile() file: Express.Multer.File, @GetUser() user) {
-    return await this.service.create(file);
+    return await this.service.create(file, user);
   }
   @Get('/:id')
   async get(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
@@ -46,7 +46,7 @@ export class ImagesController {
   }
   @Delete('/:id')
   async delete(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string, @GetUser() user) {
-    return await this.service.delete(id);
+    return await this.service.delete(id, user);
   }
   @Patch('/:id')
   @UseInterceptors(
@@ -56,6 +56,6 @@ export class ImagesController {
     UploadFileInterceptor,
   )
   async update(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string, @UploadedFile() file: Express.Multer.File, @GetUser() user) {
-    return await this.service.update(id, file);
+    return await this.service.update(id, file,user);
   }
 }
