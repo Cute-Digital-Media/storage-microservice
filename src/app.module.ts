@@ -14,7 +14,7 @@ import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({cache: true}),
+    ConfigModule.forRoot({ cache: true }),
     UserModule,
     TypeormModule,
     EnvModule,
@@ -26,6 +26,7 @@ import { ConfigModule } from '@nestjs/config';
       store: redisStore,
       host: 'localhost',
       port: 6379,
+      ttl: 10
     }),
   ],
   controllers: [AppController],
