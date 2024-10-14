@@ -1,7 +1,6 @@
 import { AutoMap } from "@automapper/classes";
-import { ValidMimeTypes } from "../constants/valid-mime-types.constant";
-import { AppError } from "libs/common/application/errors/app.errors";
-
+import { BaseDomainEntity } from "libs/common/domain/base-domain.entity";
+import { UserEntity } from "./user.entity";
 
 export class FileEntityProps
 {
@@ -19,12 +18,16 @@ export class FileEntityProps
 
     @AutoMap()
     public url?: string
-} 
 
-export class  BaseDomainEntity
-{
-    id: string; 
+    @AutoMap()
+    public userId: string
+
+    @AutoMap()
+    public user?: UserEntity
 }
+ 
+
+
 export class FileEntity extends BaseDomainEntity 
 {
     constructor(props: FileEntityProps) {

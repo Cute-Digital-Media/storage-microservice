@@ -12,7 +12,6 @@ import { IFileStorageService } from "apps/file-gateway/src/application/services/
 import { ValidMimeTypes } from "apps/file-gateway/src/domain/constants/valid-mime-types.constant";
 import { AppError } from "libs/common/application/errors/app.errors";
 import { EnvVarsAccessor } from "libs/common/configs/env-vars-accessor";
-import { v4 } from 'uuid';
 import { StringExtension } from "apps/file-gateway/src/infrastructure/utils/string-extensions";
 
 export class CreateFileCommand
@@ -60,9 +59,8 @@ export class CreateFileCommandHandler implements ICommandHandler<CreateFileComma
             this.logger.error(`An error ocurred uploading the file.`)        
             return Result.Fail(uploadResult.unwrapError())
         }
-
         const fileUrl = EnvVarsAccessor.MS_HOST + ":" + EnvVarsAccessor.MS_PORT + "/api/fileGW/file/" + fileName + "?isPrivate=" + command.dto.isPrivate; 
-        const file = new FileEntity({fileName,type, size, url: fileUrl});
+        const file = new FileEntity({fileName,type, size, url: fileUrl, userId});
         
         const saveResult = await this.fileRepository.saveNew(file)
         const mapped = this.mapper.map(saveResult,FilePersistence, FileEntity);

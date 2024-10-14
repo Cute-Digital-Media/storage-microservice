@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { FileGatewayModule } from './file-gateway.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { EnvVarsAccessor } from 'libs/common/configs/env-vars-accessor';
-import { config } from 'dotenv';
+import { DbSeeder } from './infrastructure/seed/db-seeder';
 
 async function bootstrap() {
 
@@ -28,6 +28,9 @@ async function bootstrap() {
   await app.startAllMicroservices();
   await app.listen(EnvVarsAccessor.MS_PORT);
   console.log(`FileGateway microservice is running on: ${await app.getUrl()}`);
+  
+  const dbSeeder = app.get<DbSeeder>(DbSeeder);
+  await dbSeeder.seed(); 
 }
 
 bootstrap();

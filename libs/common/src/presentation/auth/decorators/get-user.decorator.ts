@@ -1,14 +1,14 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 
-
 export const GetTokenUser = createParamDecorator(
-  (data: string, ctx: ExecutionContext) => {
-    // TODO: abstract this logic away 
+  async (data: string, ctx: ExecutionContext) => {
+    
     // const req = ctx.switchToHttp().getRequest();
-    // const tokenUser = req.tokenUser;
+    // const tokenUser: JwtPayload = req. ;
 
     // if (tokenUser)
     //   return (!data) ? tokenUser : tokenUser[data];
-    return "user_uuid"
-    },
+
+    return "670d1451-5974-8002-9288-aa476cb08e01";
+  }
 );

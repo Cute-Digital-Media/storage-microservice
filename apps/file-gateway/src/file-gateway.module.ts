@@ -15,6 +15,7 @@ import { FileQueries } from './application/features/file/queries/file.queries';
 import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage, memoryStorage } from 'multer';
 import { ExternalServicesProviders } from './infrastructure/external-services/external-services';
+import { DbSeeder } from './infrastructure/seed/db-seeder';
 
 config();
 @Module({
@@ -46,7 +47,8 @@ config();
     ...FileCommandHandlers, 
     ...FileQueries, 
     ...RepositoryProviders, 
-    ...ExternalServicesProviders
+    ...ExternalServicesProviders, 
+    DbSeeder
   ],
 })
 export class FileGatewayModule {}

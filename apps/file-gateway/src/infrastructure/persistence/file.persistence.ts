@@ -1,6 +1,7 @@
 import { AutoMap } from '@automapper/classes';
 import { AuditablePersistenceEntity } from 'libs/common/infrastructure/persistence/auditable.persistence.entity';
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { UserPersistence } from './user.persistence';
 
 @Entity('file')
 export class FilePersistence extends AuditablePersistenceEntity{
@@ -24,4 +25,13 @@ export class FilePersistence extends AuditablePersistenceEntity{
     @Column({ type: 'text', nullable: true})
     public url?: string
 
+    @AutoMap()
+    @Column({ type: 'text', name: "user_id"})
+    public userId?: string
+
+    
+    @AutoMap()
+    @ManyToOne(() => UserPersistence)
+    @JoinColumn({ name: 'user_id' })
+    user?: UserPersistence;
 }
