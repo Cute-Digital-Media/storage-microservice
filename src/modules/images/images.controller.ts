@@ -8,7 +8,6 @@ import logger from '../../logger';
 import { Image } from './entities/image.entity';
 import { ImageTransformService } from './services/image-transform.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-
 @UseGuards(JwtAuthGuard)// Use JWT authentication guard for the routes
 @ApiBearerAuth('JWT-auth')
 @ApiTags('images') // Tag for the images API
@@ -189,6 +188,4 @@ export class ImageController {
         const url = await this.firebaseService.uploadImage(resizedFile);
         return { url }; // Return the URL of the resized image
     }
-
-
 }

@@ -1,10 +1,10 @@
+/* eslint-disable prettier/prettier */
 import { Module, MiddlewareConsumer } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ImagesModule } from './modules/images/images.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Image } from './modules/images/entities/image.entity';
-import { FirebaseModule } from './modules/firebase/firebase.module';
 import logger from './logger';
 @Module({
   imports: [
@@ -19,7 +19,6 @@ import logger from './logger';
       synchronize: true,
     }),
     ImagesModule,
-    FirebaseModule,
   ],
   controllers: [AppController],
   providers: [AppService],
