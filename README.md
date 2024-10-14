@@ -11,7 +11,6 @@ This project provides a scalable and efficient image storage microservice, featu
 - **Image retrieval** via public URLs.
 - **Security with JWT authentication** to protect access to the endpoints (Mocked data, not real authentication process required).
 
-
 ### Additional Features (Optional)
 
 - Thumbnail generation (for image resizing).
@@ -38,7 +37,7 @@ You should use the following tech stack during this project:
 - TypeORM.
 - PostgreSQL.
 - Redis (optional).
-  
+
 ---
 
 ## Project workflow
@@ -59,22 +58,79 @@ You should use the following tech stack during this project:
    ```bash
    git clone <REPOSITORY_URL>
    cd <PROJECT_NAME>
-   
+
+   ```
+
 2. **Install dependencies**
+
    ```bash
    yarn install
-   
+
+   ```
+
 3. **.env variables**
+
 - You should update this point to include env names needed.
 
 4. **Start the Service**
-    ```bash
-    yarn start:dev
-    
-6. **Final considerations and recomendations**
+
+   ```bash
+   yarn start:dev
+
+   ```
+
+5. **Final considerations and recomendations**
+
 - Keep it simple.
 - Be organized in your code.
 - Don't forget to provide the necessary environment variable names needed to run and test the project.
 - Good luck :).
 
-   
+---
+
+===========================================
+
+## Environment Variables Setup
+
+Rename the .env.example file to .env:
+mv .env.example .env
+
+## A summary of the key endpoints available in this service:
+
+- **POST** `/images/upload` – Upload an image.
+- **GET** `/images` – List images with optional filters.
+- **GET** `/images/:id` – Retrieve a specific image by ID.
+- **DELETE** `/images/:id` – Delete an image by ID.
+
+## Access to Swagger
+
+- http://localhost:3000/api
+
+## JWT
+
+-Bearer fake-jwt-token
+
+## Run the Tests
+
+-yarn test
+
+## Usage of Redis
+
+Start Redis locally with the following commands:
+
+-Start Redis manually:
+redis-server --daemonize yes
+
+-Start Redis as a system service (Linux):
+sudo service redis-server start
+
+-Always verify that Redis is running by using:
+redis-cli ping
+Expected response:
+PONG
+
+## Contact
+
+Author: Alejandro Espino Pérez
+Email: espinoperezalejandro50@gmail.com
+Phone: +53 56108535
