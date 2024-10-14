@@ -97,14 +97,18 @@ export class ImageController {
 
     @Get(':id')// Endpoint to get an image by its ID
     @ApiOperation({ summary: 'Get an image by ID' }) // Summary of the operation
-    @ApiParam({ name: 'id', type: Number, description: 'ID of the image' }) // Parámetro ID
+    @ApiParam({ name: 'id', type: Number, description: 'ID of the image' }) 
     @ApiOperation({ summary: 'Get an image (requires JWT token)' })
     @ApiResponse({ status: 200, description: 'Image retrieved successfully.' })
     @ApiResponse({ status: 404, description: 'Image not found.' })
     async getImage(@Param('id') id: number) {
-        return this.imageService.getImage(id);// Return image by ID
+        const image = await this.imageService.getImage(id); 
+        if (!image) {
+            logger.warn(`No se encontró la imagen con ID ${id}`);
+            throw new NotFoundException(`No se encontró la imagen con ID ${id}`); 
+        }
+        return image;
     }
-
 
     @Delete(':id')// Endpoint to delete an image by its ID
     @ApiOperation({ summary: 'Delete an image by ID' }) // Summary of the operation

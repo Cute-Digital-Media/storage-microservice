@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, FindOptionsWhere, MoreThanOrEqual, LessThanOrEqual, Like } from 'typeorm';
 import { Image } from '../entities/image.entity';
@@ -32,7 +32,7 @@ export class ImagesService {
         }
         const image = await this.imageRepository.findOne({ where: { id } });
         if (!image) {
-            throw new BadRequestException('Imagen no encontrada');
+            return null;
         }
 
         await this.redisService.set(`image:${id}`, image);
