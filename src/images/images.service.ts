@@ -1,25 +1,36 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { ILike, Repository } from 'typeorm';
+import { Logger } from 'winston';
 import { FirebaseService } from '../firebase/firebase.service';
 import { ImageEntity } from './dto/entities/image.entity';
 import { ImageDto } from './dto/image.dto';
 import { PaginationResultDto } from './pagination/pagination-result.dto';
 import { PaginationDto } from './pagination/pagination.dto';
+
 @Injectable()
 export class ImagesService {
   constructor(
     @InjectRepository(ImageEntity)
     private readonly imageRepository: Repository<ImageEntity>,
     private readonly firebaseService: FirebaseService,
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
   ) {}
 
   async uploadImage(imageDto: ImageDto): Promise<ImageEntity> {
     imageDto.url = await this.firebaseService.uploadImage(imageDto);
     imageDto.buffer = undefined;
-    return await this.imageRepository.save({
+
+    const result = await this.imageRepository.save({
       ...imageDto,
     } as ImageEntity);
+
+    this.logger.info(
+      `User '${imageDto.userId}' uploaded image '${imageDto.firebaseFileName}' to folder '${imageDto.tenant}/${imageDto.userId}/${imageDto.folderName}'`,
+    );
+
+    return result;
   }
 
   async getImageById(id: number): Promise<ImageEntity> {
@@ -76,5 +87,8 @@ export class ImagesService {
     const image = await this.getImageById(id);
     await this.firebaseService.deleteImage(image);
     await this.imageRepository.delete(id);
+    this.logger.info(
+      `User '${image.userId}' deleted image '${image.firebaseFileName}' from folder '${image.tenant}/${image.userId}/${image.folderName}'`,
+    );
   }
 }

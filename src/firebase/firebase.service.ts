@@ -45,7 +45,6 @@ export class FirebaseService {
 
     try {
       await file.delete();
-      console.log(`File ${filePath} deleted successfully`);
     } catch (error) {
       console.error(`Error deleting file ${filePath}:`, error);
       throw error;
