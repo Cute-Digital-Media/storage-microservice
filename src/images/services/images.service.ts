@@ -1,6 +1,6 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, FindOptionsWhere, MoreThanOrEqual, LessThanOrEqual,Like } from 'typeorm';
 import { Image } from '../entities/image.entity';
 
 @Injectable()
@@ -30,5 +30,25 @@ export class ImagesService {
 
     async deleteImage(id: number): Promise<void> {
         await this.imageRepository.delete(id);
+    }
+
+    // Obtener todas las imágenes con filtros opcionales
+    async getImagesWithFilters(filters: any): Promise<Image[]> {
+        const where: FindOptionsWhere<Image> = {};
+
+        if (filters.filename) {
+            where.filename = Like(`%${filters.filename}%`);
+        }
+        if (filters.uploadedBy) {
+            where.uploadedBy = filters.uploadedBy;
+        }
+        if (filters.minSize) {
+            where.size = MoreThanOrEqual(Number(filters.minSize));
+        }
+        if (filters.maxSize) {
+            where.size = LessThanOrEqual(Number(filters.maxSize));
+        }
+
+        return await this.imageRepository.find({ where });
     }
 }

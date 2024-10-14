@@ -1,15 +1,16 @@
 /* eslint-disable prettier/prettier */
-import { Controller, UseGuards, Post, UploadedFile, UseInterceptors, Get, Param, Delete, NotFoundException, BadRequestException, Body } from '@nestjs/common';
+import { Controller, UseGuards, Post, UploadedFile, UseInterceptors, Get, Param, Delete, NotFoundException, BadRequestException, Body, Query } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FirebaseService } from '../firebase/firebase.service';
 import { ImagesService } from './services/images.service';
-import { ApiTags, ApiOperation, ApiResponse, ApiConsumes, ApiBody, ApiParam } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiConsumes, ApiBody, ApiParam, ApiQuery, ApiBearerAuth } from '@nestjs/swagger';
 import logger from '../logger';
 import { Image } from './entities/image.entity';
 import { ImageTransformService } from './services/image-transform.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @UseGuards(JwtAuthGuard)// Use JWT authentication guard for the routes
+@ApiBearerAuth('JWT-auth')
 @ApiTags('images') // Tag for the images API
 @Controller('images')// Define the controller for image-related routes
 export class ImageController {
@@ -22,6 +23,7 @@ export class ImageController {
 
     @Post('upload') // Endpoint to upload images
     @UseInterceptors(FileInterceptor('file')) // Use file interceptor to handle file uploads
+    @ApiOperation({ summary: 'Upload an image (requires JWT token)' })
     @ApiOperation({ summary: 'Upload an image' }) // Summary of the operation
     @ApiConsumes('multipart/form-data') // Indicates that 'multipart/form-data' is consumed
     @ApiBody({
@@ -66,25 +68,46 @@ export class ImageController {
             uploadedBy
         );
         logger.info(`Imagen subida: ${file.originalname}, URL: ${url}`);
-        return { image };
+        return { message: 'Image uploaded successfully', image };
+
     }
 
-    // Endpoint to get all images
     @Get()
-    @ApiOperation({ summary: 'Get all images' }) // Summary of the operation
-    @ApiResponse({ status: 200, description: 'Images retrieved successfully.' }) // Successful response
-    async getAllImages(): Promise<Image[]> {
-        return this.imageService.getAllImages();
-    }
+    @ApiOperation({ summary: 'Get images with optional filters' })
+    @ApiOperation({ summary: 'Get images (requires JWT token)' })
+    @ApiResponse({ status: 200, description: 'Images retrieved successfully.' })
+    @ApiQuery({ name: 'filename', required: false, description: 'Filter by filename' })
+    @ApiQuery({ name: 'uploadedBy', required: false, description: 'Filter by uploaded user'})
+    @ApiQuery({ name: 'minSize', required: false, description: 'Minimum file size (in bytes)', type: Number })
+    @ApiQuery({ name: 'maxSize', required: false, description: 'Maximum file size (in bytes)', type: Number })
+    async getImages(
+        @Query('filename') filename?: string,
+        @Query('uploadedBy') uploadedBy?: string,
+        @Query('minSize') minSize?: string,
+        @Query('maxSize') maxSize?: string,
+    ): Promise<Image[]> {
+        const filters = { filename, uploadedBy, minSize, maxSize };
 
+        // Si no se pasan filtros, devolver todas las imágenes.
+        const hasFilters = Object.values(filters).some((value) => value !== undefined);
+        if (!hasFilters) {
+            return this.imageService.getAllImages();
+        }
+
+        // Si hay filtros, aplicar la búsqueda filtrada.
+        return this.imageService.getImagesWithFilters(filters);
+    }
+    
     @Get(':id')// Endpoint to get an image by its ID
     @ApiOperation({ summary: 'Get an image by ID' }) // Summary of the operation
     @ApiParam({ name: 'id', type: Number, description: 'ID of the image' }) // Parámetro ID
+    @ApiOperation({ summary: 'Get an image (requires JWT token)' })
     @ApiResponse({ status: 200, description: 'Image retrieved successfully.' })
     @ApiResponse({ status: 404, description: 'Image not found.' })
     async getImage(@Param('id') id: number) {
         return this.imageService.getImage(id);// Return image by ID
     }
+
 
     @Delete(':id')// Endpoint to delete an image by its ID
     @ApiOperation({ summary: 'Delete an image by ID' }) // Summary of the operation
@@ -94,6 +117,7 @@ export class ImageController {
         description: 'ID of the image to delete',
         example: 1,
     }) // Parámetro ID
+    @ApiOperation({ summary: 'Delete an image (requires JWT token)' })
     @ApiResponse({ status: 200, description: 'Image deleted successfully.' }) 
     @ApiResponse({ status: 404, description: 'Image not found.' }) 
     @ApiResponse({ status: 400, description: 'Invalid ID or failed to delete the image.' }) 
@@ -113,7 +137,21 @@ export class ImageController {
 
 
     @Post('resize') // Endpoint to resize an image
+    @ApiOperation({ summary: 'Resiza an image (requires JWT token)' })
+    @ApiResponse({ status: 400, description: 'No file provided or invalid dimensions.' })
     @UseInterceptors(FileInterceptor('file')) // Use file interceptor to handle file uploads
+    @ApiBody({
+        description: 'Image and dimensions to resize',
+        schema: {
+            type: 'object',
+            properties: {
+                file: { type: 'string', format: 'binary' },
+                width: { type: 'integer', example: 100 },
+                height: { type: 'integer', example: 100 },
+            },
+        },
+    })
+
     async resizeImage(
         @UploadedFile() file: Express.Multer.File, // The uploaded file
         @Body('width') width: string,  // Width for resizing
