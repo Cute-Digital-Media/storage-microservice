@@ -7,12 +7,17 @@ export class UserMapper implements IUserMapper {
   }
 
   toEntity(user: UserDomain): Partial<UserEntity> {
-    const props = {
+    return {
       id: user.id,
       name: user.name,
       email: user.email,
       password: user.password,
     };
-    return props;
+  }
+  toView(user: UserDomain): Partial<UserEntity> {
+    return{
+      name: user.name,
+      email: user.email,
+    }
   }
 }
