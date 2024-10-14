@@ -77,8 +77,25 @@ You should use the following tech stack during this project:
 - Don't forget to provide the necessary environment variable names needed to run and test the project.
 - Good luck :).
 
-## Access to Swagger
+===========================================
+## Environment Variables Setup
+Rename the .env.example file to .env:
+mv .env.example .env
+
+## A summary of the key endpoints available in this service:
+- **POST** `/images/upload` – Upload an image.
+- **GET** `/images` – List images with optional filters.
+- **GET** `/images/:id` – Retrieve a specific image by ID.
+- **DELETE** `/images/:id` – Delete an image by ID.
+
+
+##  Access to Swagger
 - http://localhost:3000/api
 
 ## JWT
 -Bearer fake-jwt-token
+
+## Contact
+Author: Alejandro Espino Pérez
+Email: espinoperezalejandro50@gmail.com
+Phone: +53 56108535
