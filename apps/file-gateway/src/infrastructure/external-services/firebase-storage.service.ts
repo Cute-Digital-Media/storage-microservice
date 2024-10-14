@@ -29,34 +29,26 @@ export class FireBaseStorageService implements IFileStorageService {
 
     async uploadFileAsync(fileName: string, file: Buffer, isPrivate: boolean, contentType: string): Promise<Result<void>> {
         try {
-            this.logger.info(`Uploading file: ${fileName}, Private: ${isPrivate}`);
+            this.logger.info(`Uploading file: ${fileName}, Private: ${isPrivate}`);            
             const fileRef = this.bucket.file(fileName);
-            const stream = fileRef.createWriteStream({
+            await fileRef.save(file, {
                 metadata: {
                     contentType,
                 },
                 public: !isPrivate,
-            });
-
-            return new Promise<Result<void>>((resolve, reject) => {
-                stream.on('error', (err) => {
-                    this.logger.error(`Error uploading file: ${fileName}`);
-                    return reject(Result.Fail<void>(new AppError.UnexpectedError())); 
-                });
-                stream.on('finish', async () => {
-                    if (!isPrivate) {
-                        await fileRef.makePublic(); 
-                    }
-                    resolve(Result.Ok<void>());
-                });
-                stream.end(file); 
-            });
+            });    
+            if (!isPrivate) {
+                await fileRef.makePublic();
+            }
+    
+            this.logger.info(`File uploaded successfully: ${fileName}`);
+            return Result.Ok<void>();
         } catch (error) {
             this.logger.error(`Error in uploadFileAsync: ${error.message}`);
             return Result.Fail<void>(error.message);
         }
     }
-
+    
     async editFileAsync(fileName: string, oldPath: string, file: Buffer, isPrivate: boolean, contentType: string): Promise<Result<void>> {
         try {
             this.logger.info(`Editing file: ${fileName}, deleting old file: ${oldPath}`);
@@ -84,7 +76,6 @@ export class FireBaseStorageService implements IFileStorageService {
         try {
             this.logger.info(`Fetching file: ${fileName}`);
             const fileRef = this.bucket.file(fileName);
-            
             const [metadata] = await fileRef.getMetadata();
             
             const buffer: Buffer = await new Promise((resolve, reject) => {
@@ -95,6 +86,9 @@ export class FireBaseStorageService implements IFileStorageService {
                     chunks.push(chunk);
                 });
                 stream.on('end', () => {
+                    if (chunks.length === 0) {
+                        this.logger.warn('No data received from the file stream.');
+                    }
                     resolve(Buffer.concat(chunks));
                 });
                 stream.on('error', (err) => {
@@ -102,7 +96,6 @@ export class FireBaseStorageService implements IFileStorageService {
                     reject(err);
                 });
             });
-    
             const fileModel = new FileModel(
                 buffer,
                 fileName,

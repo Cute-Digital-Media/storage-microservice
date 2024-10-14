@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotImplementedException, UseInterceptors, UploadedFile, Inject } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotImplementedException, UseInterceptors, UploadedFile, Inject, Res } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateFileDto } from 'apps/file-gateway/src/application/features/file/commands/create/file.create.dto.command';
 import { UpdateFileDto } from 'apps/file-gateway/src/application/features/file/commands/update/file.update.dto';
@@ -8,6 +8,11 @@ import { LoggerService } from '../../application/services/ilogger.service';
 import { Result } from 'libs/common/application/base';
 import { FileEntity } from '../../domain/entities/file.entity';
 import { GetTokenUser } from 'libs/common/presentation/auth/decorators/get-user.decorator';
+import { GetOneFileQuery } from '../../application/features/file/queries/get-one/file.get-one.query';
+import { FileModel } from '../../domain/models/file.model';
+import { GetOneFileDto } from '../../application/features/file/queries/get-one/file.get-one.dto';
+import { Response } from 'express';
+import { memoryStorage } from 'multer';
 
 @Controller('file')
 export class FileController {
@@ -41,7 +46,7 @@ export class FileController {
         userId,
       )
     );
-    return result.isFailure? result.unwrapError() : result.unwrap();
+    return result; 
   }
 
   @Get()
@@ -50,8 +55,18 @@ export class FileController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    throw new NotImplementedException()
+  async findOne(@Param('id') id: string, @Res() res: Response) {
+    const ans = await this.queryBus.execute<GetOneFileQuery, Result<FileModel>>(
+      new GetOneFileQuery(new GetOneFileDto(id), "userId")
+    );
+    if(ans.isFailure)
+    {
+      return ans.unwrapError();
+    }
+    const file = ans.unwrap();    
+    res.setHeader('Content-Type', file.contentType);
+    return res.send(file.file);    
+
   }
 
   @Patch(':id')

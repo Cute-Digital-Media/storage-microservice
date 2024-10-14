@@ -13,7 +13,7 @@ import { config } from 'dotenv';
 import { FileCommandHandlers } from './application/features/file/commands/file.commands';
 import { FileQueries } from './application/features/file/queries/file.queries';
 import { MulterModule } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
+import { diskStorage, memoryStorage } from 'multer';
 import { ExternalServicesProviders } from './infrastructure/external-services/external-services';
 
 config();
@@ -36,14 +36,8 @@ config();
     }),
     TypeOrmModule.forFeature(PersistenceEntities),
     MulterModule.register({
-      storage: diskStorage({
-          destination: './uploads', // Carpeta de destino para los archivos
-          filename: (req, file, cb) => {
-              const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-              cb(null, `${uniqueSuffix}-${file.originalname}`);
-          }
-      })
-  }),
+      storage: memoryStorage()
+    }),
   ],
   controllers: FileGateWayControllers,
   providers: [
