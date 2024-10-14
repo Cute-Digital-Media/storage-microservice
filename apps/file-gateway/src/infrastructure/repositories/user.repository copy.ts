@@ -5,6 +5,8 @@ import { Inject, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UserEntity } from "../../domain/entities/user.entity";
 import { UserPersistence } from "../persistence/user.persistence";
+import { PaginationDto } from "libs/common/presentation/dtos/pagination.dto";
+import { PaginatedFindResult } from "libs/common/application/base/pagination.result";
 
 @Injectable()
 export class UserRepository {
@@ -88,4 +90,21 @@ export class UserRepository {
         
         return this.mapper.map(userPersistence, UserPersistence, UserEntity);
     }
+    
+    async findAllPaginated(pagination: PaginationDto, options?: FindManyOptions<UserPersistence>): Promise<PaginatedFindResult<UserEntity>> {
+        const [results, total] = await this.repository.findAndCount({
+            ...options,
+            skip: (pagination.page - 1) * pagination.limit,
+            take: pagination.limit,
+        });
+
+        const items = results.map(User => this.mapper.map(User, UserPersistence, UserEntity));
+
+        return {
+            items,
+            limit: pagination.limit,
+            currentPage: pagination.page,
+            totalPages: Math.ceil(total / pagination.limit), 
+        };
+    } 
 }

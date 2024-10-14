@@ -1,4 +1,6 @@
+import { PaginationDto } from "libs/common/presentation/dtos/pagination.dto";
 import { FindManyOptions, FindOneOptions } from "typeorm";
+import { PaginatedFindResult } from "../base/pagination.result";
 
 export interface IGenericRepository<TEntity, TEntityPersistence> {
     saveNew(file: TEntity): Promise<TEntityPersistence> 
@@ -10,6 +12,8 @@ export interface IGenericRepository<TEntity, TEntityPersistence> {
     findOneByFilter(options?: FindOneOptions<TEntityPersistence>): Promise<TEntity | undefined> 
 
     findAll(options?: FindManyOptions<TEntityPersistence>): Promise<TEntity[]> 
+
+    findAllPaginated(pagination: PaginationDto, options?: FindManyOptions<TEntityPersistence>): Promise<PaginatedFindResult<TEntity>> 
 
     findById(id: string): Promise<TEntity | undefined> 
     

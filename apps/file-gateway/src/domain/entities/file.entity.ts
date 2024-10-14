@@ -24,6 +24,9 @@ export class FileEntityProps
 
     @AutoMap()
     public user?: UserEntity
+
+    @AutoMap()
+    public isPrivate: boolean   
 }
  
 

@@ -42,9 +42,15 @@ export class CreateFileCommandHandler implements ICommandHandler<CreateFileComma
         const {  size, type, userId} = command; 
         this.logger.info(`User with id ${userId} is creating a new file with extension ${command.type}.`)        
         
+        const { isPrivate } = command.dto;
         let { fileName } = command; 
+
         fileName = StringExtension.generateFileName(fileName);         
-        const fileNameWithUser = command.dto.isPrivate ? `${userId}/${fileName}` : fileName;
+        let fileNameWithUser = fileName; 
+        if(isPrivate === true)
+        {
+            fileNameWithUser = `${userId}/${fileName}`; 
+        }
 
         this.logger.info(`New file name generated: ${fileName}.`)
         
@@ -53,14 +59,15 @@ export class CreateFileCommandHandler implements ICommandHandler<CreateFileComma
             this.logger.error(`Invalid mime type ${type}.`)
             return Result.Fail(new AppError.ValidationError(`Invalid mime type ${type}.`))
         }
-        const uploadResult = await this.storageFileService.uploadFileAsync(fileNameWithUser,command.data,command.dto.isPrivate,type); 
+        this.logger.info(`Uploading file to storage with name: ${fileNameWithUser}.`)
+        const uploadResult = await this.storageFileService.uploadFileAsync(fileNameWithUser,command.data,isPrivate,type); 
         if(uploadResult.isFailure)
         {
             this.logger.error(`An error ocurred uploading the file.`)        
             return Result.Fail(uploadResult.unwrapError())
         }
-        const fileUrl = EnvVarsAccessor.MS_HOST + ":" + EnvVarsAccessor.MS_PORT + "/api/fileGW/file/" + fileName + "?isPrivate=" + command.dto.isPrivate; 
-        const file = new FileEntity({fileName,type, size, url: fileUrl, userId});
+        const fileUrl = EnvVarsAccessor.MS_HOST + ":" + EnvVarsAccessor.MS_PORT + "/api/fileGW/file/" + fileName + "?isPrivate=" + isPrivate; 
+        const file = new FileEntity({fileName,type, size, url: fileUrl, userId, isPrivate});
         
         const saveResult = await this.fileRepository.saveNew(file)
         const mapped = this.mapper.map(saveResult,FilePersistence, FileEntity);

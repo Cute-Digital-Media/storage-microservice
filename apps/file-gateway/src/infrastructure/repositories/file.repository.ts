@@ -5,6 +5,8 @@ import { Mapper } from "@automapper/core";
 import { InjectMapper } from "@automapper/nestjs";
 import { Inject, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { PaginationDto } from "libs/common/presentation/dtos/pagination.dto";
+import { PaginatedFindResult } from "libs/common/application/base/pagination.result";
 
 @Injectable()
 export class FileRepository {
@@ -88,4 +90,21 @@ export class FileRepository {
         
         return this.mapper.map(filePersistence, FilePersistence, FileEntity);
     }
+
+    async findAllPaginated(pagination: PaginationDto, options?: FindManyOptions<FilePersistence>): Promise<PaginatedFindResult<FileEntity>> {
+        const [results, total] = await this.repository.findAndCount({
+            ...options,
+            skip: (pagination.page - 1) * pagination.limit,
+            take: pagination.limit,
+        });
+
+        const items = results.map(file => this.mapper.map(file, FilePersistence, FileEntity));
+
+        return {
+            items,
+            limit: pagination.limit,
+            currentPage: pagination.page,
+            totalPages: Math.ceil(total / pagination.limit), 
+        };
+    } 
 }

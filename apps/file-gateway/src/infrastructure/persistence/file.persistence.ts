@@ -29,6 +29,9 @@ export class FilePersistence extends AuditablePersistenceEntity{
     @Column({ type: 'text', name: "user_id"})
     public userId?: string
 
+    @AutoMap()
+    @Column({ type: 'boolean'})
+    public isPrivate: boolean   
     
     @AutoMap()
     @ManyToOne(() => UserPersistence)

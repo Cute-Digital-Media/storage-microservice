@@ -1,7 +1,6 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotImplementedException, UseInterceptors, UploadedFile, Inject, Res, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotImplementedException, UseInterceptors, UploadedFile, Inject, Res, Query, HttpStatus } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateFileDto } from 'apps/file-gateway/src/application/features/file/commands/create/file.create.dto.command';
-import { UpdateFileDto } from 'apps/file-gateway/src/application/features/file/commands/update/file.update.dto';
 import { CreateFileCommand } from '../../application/features/file/commands/create/file.create.command';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { LoggerService } from '../../application/services/ilogger.service';
@@ -12,6 +11,9 @@ import { GetOneFileQuery } from '../../application/features/file/queries/get-one
 import { FileModel } from '../../domain/models/file.model';
 import { GetOneFileDto } from '../../application/features/file/queries/get-one/file.get-one.dto';
 import { Response } from 'express';
+import { GetAllFilesQuery } from '../../application/features/file/queries/get-all/file.get-all.query';
+import { PaginationDto } from 'libs/common/presentation/dtos/pagination.dto';
+import { GetAllFilesDto } from '../../application/features/file/queries/get-all/file.get-all.dto';
 
 @Controller('file')
 export class FileController {
@@ -42,15 +44,40 @@ export class FileController {
         file.mimetype,
         fileBuffer,
         dto,
-        userId,
+        userId
       )
     );
     return result; 
   }
 
-  @Get()
-  findAll() {
-    throw new NotImplementedException()
+  @Post("/all")
+  async getAll(
+    @Query("page") page: number,
+    @Query("limit") limit: number,
+    @Body() filter: GetAllFilesDto, 
+    @GetTokenUser('sub') userId: string, 
+    @Res() res: Response, 
+  ) {
+    if(!page || !limit)
+    {
+      return res.status(HttpStatus.BAD_REQUEST).send({error: "Missing pagination."});
+    }
+
+    const ans = await this.queryBus.execute<GetAllFilesQuery,Result<never>>(      
+      new GetAllFilesQuery(
+        userId,
+        false, 
+        filter,
+        new PaginationDto(limit,page)
+      ) 
+    );
+
+    if (ans.isFailure) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(ans);
+    }
+
+    const files = ans.unwrap();
+    return res.status(HttpStatus.OK).send(files);
   }
 
   @Get(':id')
@@ -74,10 +101,10 @@ export class FileController {
     return res.send(file.file);    
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateFileDto: UpdateFileDto) {
-    throw new NotImplementedException()
-  }
+  // @Patch(':id')
+  // update(@Param('id') id: string, @Body() updateFileDto: UpdateFileDto) {
+  //   throw new NotImplementedException()
+  // }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
