@@ -29,7 +29,7 @@ const mockImageRepository = {
 // Mock del RedisService
 const mockRedisService = {
     set: jest.fn().mockResolvedValue(undefined),
-    get: jest.fn().mockResolvedValue(JSON.stringify(mockImage)), // Devuelve un JSON stringificado de la imagen
+    get: jest.fn().mockResolvedValue(JSON.stringify(mockImage)),
     del: jest.fn().mockResolvedValue(undefined),
 };
 
@@ -54,7 +54,7 @@ describe('ImagesService', () => {
                 },
                 {
                     provide: RedisService,
-                    useValue: mockRedisService, // Usando el mock del RedisService
+                    useValue: mockRedisService,
                 },
             ],
         }).compile();
@@ -66,6 +66,4 @@ describe('ImagesService', () => {
     it('should be defined', () => {
         expect(service).toBeDefined();
     });
-
-    // Agrega más pruebas aquí...
 });

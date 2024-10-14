@@ -19,12 +19,12 @@ describe('ImageTransformService', () => {
 
     it('should resize the image correctly', async () => {
         try {
-            // Crear una imagen en memoria usando el constructor
+            // Imagen en memoria usando el constructor
             const image = new Jimp(800, 600, 0xFFFFFFFF); // Imagen blanca de 800x600
             const imageBuffer = await image.getBufferAsync(Jimp.MIME_PNG);
 
             const width = 400;
-            const height = 300; // Cambié los valores para comprobar el redimensionamiento
+            const height = 300; 
 
             // Llamar al servicio para redimensionar la imagen
             const resizedBuffer = await service.resizeImage(imageBuffer, width, height);
@@ -35,7 +35,7 @@ describe('ImageTransformService', () => {
             expect(metadata.height).toBe(height);
         } catch (error) {
             console.error('Error during test:', error);
-            throw error; // Volver a lanzar el error para que falle el test correctamente
+            throw error;
         }
     });
 });

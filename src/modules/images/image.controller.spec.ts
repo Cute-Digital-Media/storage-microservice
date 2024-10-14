@@ -3,14 +3,14 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ImageController } from './images.controller';
 import { ImagesService } from './services/images.service';
 import { FirebaseService } from '../firebase/firebase.service';
-import { ImageTransformService } from './services/image-transform.service'; // Asegúrate de importar esto
+import { ImageTransformService } from './services/image-transform.service';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 
 describe('ImageController', () => {
     let controller: ImageController;
     let imageService: ImagesService;
     let firebaseService: FirebaseService;
-    let imageTransformService: ImageTransformService; // Agrega esto
+    let imageTransformService: ImageTransformService; 
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
@@ -34,9 +34,9 @@ describe('ImageController', () => {
                     },
                 },
                 {
-                    provide: ImageTransformService, // Agrega el mock para el servicio
+                    provide: ImageTransformService,
                     useValue: {
-                        transformImage: jest.fn(), // Ajusta según el método que uses
+                        transformImage: jest.fn(), 
                     },
                 },
             ],

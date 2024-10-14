@@ -11,7 +11,6 @@ export class FirebaseService {
     }
 
     async uploadImage(file: Express.Multer.File): Promise<string> {
-        // Validación del tamaño máximo (5 MB)
         const MAX_SIZE = 5 * 1024 * 1024;
         if (file.size > MAX_SIZE) {
             throw new BadRequestException('El archivo supera el tamaño máximo permitido (5 MB)');
@@ -42,7 +41,6 @@ export class FirebaseService {
     async deleteImage(url: string): Promise<void> {
         const bucket = admin.storage().bucket();
 
-        // Extraer el nombre del archivo y decodificarlo.
         const fileName = decodeURIComponent(url.split('/').pop().split('?')[0]);
 
         const file = bucket.file(fileName);

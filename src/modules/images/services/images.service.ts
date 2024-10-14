@@ -1,9 +1,9 @@
 /* eslint-disable prettier/prettier */
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, FindOptionsWhere, MoreThanOrEqual, LessThanOrEqual, Like } from 'typeorm';
 import { Image } from '../entities/image.entity';
-import { RedisService } from '../../redis/redis.service'; // Importa RedisService
+import { RedisService } from '../../redis/redis.service';
 
 @Injectable()
 export class ImagesService {
@@ -20,9 +20,8 @@ export class ImagesService {
         return savedImage;
     }
 
-    // Nuevo método para obtener todas las imágenes
     async getAllImages(): Promise<Image[]> {
-        return await this.imageRepository.find(); // Devuelve todas las imágenes
+        return await this.imageRepository.find(); 
     }
 
     async getImage(id: number): Promise<Image> {

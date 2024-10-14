@@ -21,8 +21,8 @@ async function bootstrap() {
     .addBearerAuth({
       type: 'http',
       scheme: 'bearer',
-      in: 'header', // Asegúrate de que está en el encabezado
-      name: 'Authorization', // Nombre del encabezado que Swagger usará
+      in: 'header', 
+      name: 'Authorization',
     }, 'JWT-auth')
     .build();
 
@@ -30,9 +30,9 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document, {
     swaggerOptions: {
-      persistAuthorization: true, // Asegura que la autorización persista
+      persistAuthorization: true,
     },
-  }); // Monta Swagger UI en la ruta /api
+  });
 
   await app.listen(3000);
 }
