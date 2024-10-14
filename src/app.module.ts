@@ -1,11 +1,13 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule, TypeOrmModuleAsyncOptions } from '@nestjs/typeorm';
+import { WinstonModule } from 'nest-winston';
+import { format, transports } from 'winston';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { AuthModule } from './auth/auth.module';
 import { FirebaseModule } from './firebase/firebase.module';
 import { ImagesModule } from './images/images.module';
-import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 
 @Module({
@@ -25,6 +27,29 @@ import { UsersModule } from './users/users.module';
           synchronize: true,
         } as TypeOrmModuleAsyncOptions;
       },
+    }),
+    WinstonModule.forRoot({
+      transports: [
+        new transports.Console({
+          format: format.combine(
+            format.cli(),
+            format.splat(),
+            format.timestamp({ format: 'DD/MM/YYYY, hh:mm:ss' }),
+            format.printf((info) => {
+              return `[${info.timestamp}]: ${info.message}`;
+            }),
+          ),
+        }),
+        new transports.File({
+          filename: `logs/images.log`,
+          format: format.combine(
+            format.timestamp({ format: 'DD/MM/YYYY, hh:mm:ss' }),
+            format.printf((info) => {
+              return `[${info.timestamp}]: ${info.message}`;
+            }),
+          ),
+        }),
+      ],
     }),
     FirebaseModule,
     ImagesModule,
