@@ -26,7 +26,6 @@ async function bootstrap() {
   SwaggerModule.setup('api/fileGW/docs', app, document);
 
   await app.startAllMicroservices();
-  // get port from envs 
   await app.listen(EnvVarsAccessor.MS_PORT);
   console.log(`FileGateway microservice is running on: ${await app.getUrl()}`);
 }

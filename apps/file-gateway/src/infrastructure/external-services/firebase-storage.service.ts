@@ -74,6 +74,7 @@ export class FireBaseStorageService implements IFileStorageService {
     }
     async getFileAsync(fileName: string, isPrivate: boolean): Promise<Result<FileModel>> {
         try {
+            
             this.logger.info(`Fetching file: ${fileName}`);
             const fileRef = this.bucket.file(fileName);
             const [metadata] = await fileRef.getMetadata();

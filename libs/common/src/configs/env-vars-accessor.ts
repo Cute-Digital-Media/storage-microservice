@@ -8,6 +8,7 @@ export enum EnvVars {
     FIREBASE_CLIENT_EMAIL = "FIREBASE_CLIENT_EMAIL",
     FIREBASE_PRIVATE_KEY = "FIREBASE_PRIVATE_KEY",
     FIREBASE_STORAGE_BUCKET = "FIREBASE_STORAGE_BUCKET",
+    MS_HOST = "MS_HOST",
 }
 
 export class EnvVarsAccessor {
@@ -46,5 +47,9 @@ export class EnvVarsAccessor {
 
     static get FIREBASE_STORAGE_BUCKET(): string {
         return EnvVarsAccessor.getValue(EnvVars.FIREBASE_STORAGE_BUCKET);
-    }    
+    }
+    
+    static get MS_HOST(): string {
+        return EnvVarsAccessor.getValue(EnvVars.MS_HOST);
+    }
 }

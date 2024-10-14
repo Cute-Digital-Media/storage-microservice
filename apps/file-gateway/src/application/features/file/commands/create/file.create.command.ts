@@ -11,6 +11,9 @@ import { FilePersistence } from "apps/file-gateway/src/infrastructure/persistenc
 import { IFileStorageService } from "apps/file-gateway/src/application/services/ifile-storage.service";
 import { ValidMimeTypes } from "apps/file-gateway/src/domain/constants/valid-mime-types.constant";
 import { AppError } from "libs/common/application/errors/app.errors";
+import { EnvVarsAccessor } from "libs/common/configs/env-vars-accessor";
+import { v4 } from 'uuid';
+import { StringExtension } from "apps/file-gateway/src/infrastructure/utils/string-extensions";
 
 export class CreateFileCommand
 {
@@ -37,22 +40,30 @@ export class CreateFileCommandHandler implements ICommandHandler<CreateFileComma
         @InjectMapper() private readonly mapper: Mapper        
     ) {}
     async execute(command: CreateFileCommand): Promise<Result<FileEntity>> {
-        this.logger.info(`User with id ${command.userId} is creating a new file with extension ${command.type}.`)        
-        const { fileName, size, type } = command; 
+        const {  size, type, userId} = command; 
+        this.logger.info(`User with id ${userId} is creating a new file with extension ${command.type}.`)        
         
-        const file = new FileEntity({fileName, 
-            type, size});
+        let { fileName } = command; 
+        fileName = StringExtension.generateFileName(fileName);         
+        const fileNameWithUser = command.dto.isPrivate ? `${userId}/${fileName}` : fileName;
+
+        this.logger.info(`New file name generated: ${fileName}.`)
+        
         if(!ValidMimeTypes.includes(type))
         {
             this.logger.error(`Invalid mime type ${type}.`)
             return Result.Fail(new AppError.ValidationError(`Invalid mime type ${type}.`))
         }
-        const uploadResult = await this.storageFileService.uploadFileAsync(fileName,command.data,command.dto.isPrivate,type); 
+        const uploadResult = await this.storageFileService.uploadFileAsync(fileNameWithUser,command.data,command.dto.isPrivate,type); 
         if(uploadResult.isFailure)
         {
             this.logger.error(`An error ocurred uploading the file.`)        
             return Result.Fail(uploadResult.unwrapError())
         }
+
+        const fileUrl = EnvVarsAccessor.MS_HOST + ":" + EnvVarsAccessor.MS_PORT + "/api/fileGW/file/" + fileName + "?isPrivate=" + command.dto.isPrivate; 
+        const file = new FileEntity({fileName,type, size, url: fileUrl});
+        
         const saveResult = await this.fileRepository.saveNew(file)
         const mapped = this.mapper.map(saveResult,FilePersistence, FileEntity);
         return Result.Ok(mapped); 

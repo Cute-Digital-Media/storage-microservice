@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotImplementedException, UseInterceptors, UploadedFile, Inject, Res } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotImplementedException, UseInterceptors, UploadedFile, Inject, Res, Query } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateFileDto } from 'apps/file-gateway/src/application/features/file/commands/create/file.create.dto.command';
 import { UpdateFileDto } from 'apps/file-gateway/src/application/features/file/commands/update/file.update.dto';
@@ -12,7 +12,6 @@ import { GetOneFileQuery } from '../../application/features/file/queries/get-one
 import { FileModel } from '../../domain/models/file.model';
 import { GetOneFileDto } from '../../application/features/file/queries/get-one/file.get-one.dto';
 import { Response } from 'express';
-import { memoryStorage } from 'multer';
 
 @Controller('file')
 export class FileController {
@@ -55,18 +54,24 @@ export class FileController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string, @Res() res: Response) {
+  async findOne(
+    @Param('id') id: string,
+    @Query('isPrivate') isPrivate: string,
+    @GetTokenUser('sub') userId: string, 
+    @Res() res: Response
+  ) {
+    const isPrivateBoolean = isPrivate === 'true';
     const ans = await this.queryBus.execute<GetOneFileQuery, Result<FileModel>>(
-      new GetOneFileQuery(new GetOneFileDto(id), "userId")
+      new GetOneFileQuery(new GetOneFileDto(id, isPrivateBoolean), userId)
     );
-    if(ans.isFailure)
-    {
-      return ans.unwrapError();
+    
+    if (ans.isFailure) {
+      return res.send(ans);
     }
+
     const file = ans.unwrap();    
     res.setHeader('Content-Type', file.contentType);
     return res.send(file.file);    
-
   }
 
   @Patch(':id')

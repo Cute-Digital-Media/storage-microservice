@@ -9,6 +9,6 @@ export const GetTokenUser = createParamDecorator(
 
     // if (tokenUser)
     //   return (!data) ? tokenUser : tokenUser[data];
-    return "user Id"
+    return "user_uuid"
     },
 );
