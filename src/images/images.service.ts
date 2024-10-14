@@ -6,7 +6,6 @@ import { ImageEntity } from './dto/entities/image.entity';
 import { ImageDto } from './dto/image.dto';
 import { PaginationResultDto } from './pagination/pagination-result.dto';
 import { PaginationDto } from './pagination/pagination.dto';
-
 @Injectable()
 export class ImagesService {
   constructor(
@@ -71,5 +70,11 @@ export class ImagesService {
         totalItems: total,
       },
     };
+  }
+
+  async deleteImage(id: number) {
+    const image = await this.getImageById(id);
+    await this.firebaseService.deleteImage(image);
+    await this.imageRepository.delete(id);
   }
 }
