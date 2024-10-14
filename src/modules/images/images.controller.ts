@@ -4,7 +4,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { FirebaseService } from '../firebase/firebase.service';
 import { ImagesService } from './services/images.service';
 import { ApiTags, ApiOperation, ApiResponse, ApiConsumes, ApiBody, ApiParam, ApiQuery, ApiBearerAuth } from '@nestjs/swagger';
-import logger from '../logger';
+import logger from '../../logger';
 import { Image } from './entities/image.entity';
 import { ImageTransformService } from './services/image-transform.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -77,7 +77,7 @@ export class ImageController {
     @ApiOperation({ summary: 'Get images (requires JWT token)' })
     @ApiResponse({ status: 200, description: 'Images retrieved successfully.' })
     @ApiQuery({ name: 'filename', required: false, description: 'Filter by filename' })
-    @ApiQuery({ name: 'uploadedBy', required: false, description: 'Filter by uploaded user'})
+    @ApiQuery({ name: 'uploadedBy', required: false, description: 'Filter by uploaded user' })
     @ApiQuery({ name: 'minSize', required: false, description: 'Minimum file size (in bytes)', type: Number })
     @ApiQuery({ name: 'maxSize', required: false, description: 'Maximum file size (in bytes)', type: Number })
     async getImages(
@@ -88,16 +88,14 @@ export class ImageController {
     ): Promise<Image[]> {
         const filters = { filename, uploadedBy, minSize, maxSize };
 
-        // Si no se pasan filtros, devolver todas las imágenes.
         const hasFilters = Object.values(filters).some((value) => value !== undefined);
         if (!hasFilters) {
             return this.imageService.getAllImages();
         }
 
-        // Si hay filtros, aplicar la búsqueda filtrada.
         return this.imageService.getImagesWithFilters(filters);
     }
-    
+
     @Get(':id')// Endpoint to get an image by its ID
     @ApiOperation({ summary: 'Get an image by ID' }) // Summary of the operation
     @ApiParam({ name: 'id', type: Number, description: 'ID of the image' }) // Parámetro ID
@@ -118,9 +116,9 @@ export class ImageController {
         example: 1,
     }) // Parámetro ID
     @ApiOperation({ summary: 'Delete an image (requires JWT token)' })
-    @ApiResponse({ status: 200, description: 'Image deleted successfully.' }) 
-    @ApiResponse({ status: 404, description: 'Image not found.' }) 
-    @ApiResponse({ status: 400, description: 'Invalid ID or failed to delete the image.' }) 
+    @ApiResponse({ status: 200, description: 'Image deleted successfully.' })
+    @ApiResponse({ status: 404, description: 'Image not found.' })
+    @ApiResponse({ status: 400, description: 'Invalid ID or failed to delete the image.' })
     async deleteImage(@Param('id') id: number) {
         const image = await this.imageService.getImage(id);
         if (!image) {

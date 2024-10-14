@@ -4,7 +4,7 @@ import { ImageController } from './images.controller';
 import { ImagesService } from './services/images.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Image } from './entities/image.entity';
-import { FirebaseModule } from 'src/firebase/firebase.module';
+import { FirebaseModule } from 'src/modules/firebase/firebase.module';
 import { ImageTransformService } from './services/image-transform.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 

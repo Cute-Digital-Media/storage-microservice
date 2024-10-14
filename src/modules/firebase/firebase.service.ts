@@ -1,7 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Injectable, Inject, BadRequestException } from '@nestjs/common';
 import * as admin from 'firebase-admin';
-import { Multer } from 'multer';
 
 @Injectable()
 export class FirebaseService {

@@ -1,6 +1,6 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, FindOptionsWhere, MoreThanOrEqual, LessThanOrEqual,Like } from 'typeorm';
+import { Repository, FindOptionsWhere, MoreThanOrEqual, LessThanOrEqual, Like } from 'typeorm';
 import { Image } from '../entities/image.entity';
 
 @Injectable()
@@ -19,7 +19,7 @@ export class ImagesService {
     async getAllImages(): Promise<Image[]> {
         return await this.imageRepository.find(); // Devuelve todas las imágenes
     }
-    
+
     async getImage(id: number): Promise<Image> {
         const image = await this.imageRepository.findOne({ where: { id } });
         if (!image) {
