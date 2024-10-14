@@ -4,6 +4,10 @@ export enum EnvVars {
     DB_PORT = "DB_PORT",
     DB_USER_NAME = "DB_USER_NAME",
     DB_PASSWORD = "DB_PASSWORD",
+    FIREBASE_PROJECT_ID = "FIREBASE_PROJECT_ID",
+    FIREBASE_CLIENT_EMAIL = "FIREBASE_CLIENT_EMAIL",
+    FIREBASE_PRIVATE_KEY = "FIREBASE_PRIVATE_KEY",
+    FIREBASE_STORAGE_BUCKET = "FIREBASE_STORAGE_BUCKET",
 }
 
 export class EnvVarsAccessor {
@@ -30,4 +34,17 @@ export class EnvVarsAccessor {
     static get DB_PASSWORD(): string {
         return EnvVarsAccessor.getValue(EnvVars.DB_PASSWORD);
     }
+    static get FIREBASE_PROJECT_ID(): string {
+        return EnvVarsAccessor.getValue(EnvVars.FIREBASE_PROJECT_ID);
+    }
+    static get FIREBASE_CLIENT_EMAIL(): string {
+        return EnvVarsAccessor.getValue(EnvVars.FIREBASE_CLIENT_EMAIL);
+    }
+    static get FIREBASE_PRIVATE_KEY(): string {
+        return EnvVarsAccessor.getValue(EnvVars.FIREBASE_PRIVATE_KEY);
+    }
+
+    static get FIREBASE_STORAGE_BUCKET(): string {
+        return EnvVarsAccessor.getValue(EnvVars.FIREBASE_STORAGE_BUCKET);
+    }    
 }
