@@ -72,11 +72,19 @@ You should use the following tech stack during this project:
    PRIVATE_KEY=<your_private_key>
    CLIENT_EMAIL=<your_client_email>
    CLIENT_ID=<your_client_id>
-   UTH_URI=https://accounts.google.com/o/oauth2/auth
-   TOKEN_URI=https://oauth2.googleapis.com/token
-   AUTH_CERT_URL=https://www.googleapis.com/oauth2/v1/certs
+   UTH_URI=<your_client_uth_uri>
+   TOKEN_URI=<your_client_token_uri>
+   AUTH_CERT_URL=<your_client_auth_cert_url>
    CLIENT_CERT_URL=<your_client_cert_url>
    UNIVERSAL_DOMAIN=googleapis.com
+
+   DATABASE_PORT=<database_port>
+   DATABASE_HOST=<host>
+   DATABASE_USER=<db_user>
+   DATABASE_PASSWORD=<db_password>
+   DATABASE_NAME=<db_name>
+
+   JWT_SECRET=<jwt_secret>
 
 4. **Start the Service**
     ```bash
