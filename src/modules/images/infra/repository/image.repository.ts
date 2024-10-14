@@ -4,6 +4,7 @@ import { ImageDomainRepository } from '../../domain/image.domain.repository';
 import { ImageEntity } from '../entity/image.entity';
 import { ImageDomain } from '../../domain/image.domain';
 import { ImageMapper } from '../mapper/image.mapper';
+import { NotFoundException } from '@nestjs/common';
 
 export class ImageRepository implements ImageDomainRepository {
   constructor(
@@ -24,24 +25,24 @@ export class ImageRepository implements ImageDomainRepository {
   async getImageById(id: string): Promise<ImageDomain> {
     const image = await this.repository.findOne({ where: { id } });
     if (!image) {
-      return null;
+      throw new NotFoundException('Image not found');
     }
     return this.mapper.toDomain(image);
   }
 
-  async save(image: ImageDomain): Promise<void> {
+  async save(image: ImageDomain): Promise<ImageDomain> {
     const entity = this.mapper.toEntity(image);
-    await this.repository.save(entity);
+    return this.mapper.toDomain(await this.repository.save(entity));
   }
 
-  async updateImage(id: string, image: ImageDomain): Promise<void> {
+  async updateImage(id: string, image: ImageDomain): Promise<ImageDomain> {
     const targetImage = await this.repository.findOne({
       where: { id },
     });
     if (!targetImage) {
-      return null;
+      throw new NotFoundException('Image not found');
     }
     const entity = this.mapper.toEntity(image);
-    await this.repository.save(entity);
+    return this.mapper.toDomain(await this.repository.save(entity));
   }
 }

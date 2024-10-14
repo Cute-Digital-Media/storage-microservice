@@ -1,7 +1,6 @@
 import { ImageEntity } from '../entity/image.entity';
 import { ImageDomain } from '../../domain/image.domain';
 import { IImageMapper } from './image.mapper.interface';
-import { v4 as uuidv4 } from 'uuid';
 
 export class ImageMapper implements IImageMapper {
   toDomain(entity: ImageEntity): ImageDomain {
@@ -9,11 +8,16 @@ export class ImageMapper implements IImageMapper {
   }
 
   toEntity(domain: ImageDomain): Partial<ImageEntity> {
-    const props = {
+    return {
       id: domain.id,
       type: domain.type,
       url: domain.url,
     };
-    return props;
+  }
+  toView(image: ImageDomain): Partial<ImageEntity> {
+    return {
+      id: image.id,
+      url: image.url,
+    };
   }
 }
