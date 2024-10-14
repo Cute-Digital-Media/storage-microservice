@@ -8,7 +8,7 @@ import { UserDomain } from '../../../../user/domain/user.domain';
 @Injectable()
 export class UserRegisterUseCase {
   constructor(
-    @Inject(UserService)private readonly userService: UserService,
+    @Inject(UserService) private readonly userService: UserService,
     private readonly jwtService: JwtService,
     public readonly userMapper: UserMapper,
   ) {}
@@ -29,8 +29,8 @@ export class UserRegisterUseCase {
 export class AuthResponse {
   user: Partial<UserDomain>;
   token: string;
-  protected readonly userMapper: UserMapper
-  constructor(user: UserDomain,token: string, userMapper: UserMapper ) {
+  protected readonly userMapper: UserMapper;
+  constructor(user: UserDomain, token: string, userMapper: UserMapper) {
     this.user = userMapper.toView(user);
     this.token = token;
   }

@@ -6,9 +6,18 @@ services:
     image: postgres:15.3
     ports:
       - 5432:5432
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
     # volumes:
     #   - ./pgdata:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: 123456
       POSTGRES_DB: testdatabase
+  redis:
+    container_name: test-redis-local
+    image: redis:7.0.5-alpine
+    ports:
+      - 6379:6379
+    volumes:
+      - ./redisdata:/data
