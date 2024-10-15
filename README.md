@@ -86,6 +86,9 @@ You should use the following tech stack during this project:
 
    JWT_SECRET=<jwt_secret>
 
+   REDIS_HOST=<redis_host>
+   REDIS_PORT=<redis_port>
+
 4. **Start the Service**
     ```bash
     yarn start:dev

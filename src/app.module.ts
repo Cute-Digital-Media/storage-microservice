@@ -8,6 +8,8 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { FirebaseModule } from './firebase/firebase.module';
 import { ImagesModule } from './images/images.module';
+import { RedisCacheModule } from './redis/redis-cache.module';
+import { RedisCacheService } from './redis/redis-cache.service';
 import { UsersModule } from './users/users.module';
 
 @Module({
@@ -55,8 +57,9 @@ import { UsersModule } from './users/users.module';
     ImagesModule,
     AuthModule,
     UsersModule,
+    RedisCacheModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, RedisCacheService],
 })
 export class AppModule {}
