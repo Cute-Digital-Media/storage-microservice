@@ -90,9 +90,14 @@ You should use the following tech stack during this project:
     CACHE_TTL = 60
    ```
 3.1 **Docker**
-- Note: In this case I use docker for the database and redis services, so you will need to launch the nest command in terminal.
+- Note: In this case I use docker for the database and redis services, so you will need to launch the next command in terminal.
     ```bash
   docker-compose up -d
+    ```
+  3.2 **migrations**
+- Note: For create and populate tables of database run the next command.
+    ```bash
+  yarn run migration:run
     ```
 4. **Start the Service**
     ```bash
