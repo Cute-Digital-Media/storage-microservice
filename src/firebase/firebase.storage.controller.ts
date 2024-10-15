@@ -6,6 +6,7 @@ import {
     Get,
     InternalServerErrorException,
     Param,
+    ParseIntPipe,
     Post,
     Query,
     Res,
@@ -19,6 +20,7 @@ import { AuthGuard } from 'src/auth/auth.guard';
 import { ListFileDto } from './Dto/list.file.dto';
 import { UploadFileDto } from './Dto/upload.file.dto';
 import { FirebaseStorageService } from './firebase.storage.service';
+import { SharpPipe } from './pipe/sharp.pipe';
 
 @Controller('file')
 @UseGuards(AuthGuard)
@@ -28,7 +30,7 @@ export class FirebaseStorageController {
     @Post('upload')
     @UseInterceptors(FileInterceptor('file'))
     async uploadFile(
-        @UploadedFile() file: Express.Multer.File,
+        @UploadedFile(SharpPipe) file: Express.Multer.File,
         @Body() uploadFileDto: UploadFileDto,
         @Res() res: Response,
     ) {
@@ -46,11 +48,11 @@ export class FirebaseStorageController {
 
     @Get(':id')
     async getFileById(
-        @Param('id') fileId: string,
+        @Param('id', ParseIntPipe) fileId: number,
         @Res() res: Response,
     ) {
         try {
-            const imageUrl = await this.firebaseStorageService.getFileById(Number(fileId));
+            const imageUrl = await this.firebaseStorageService.getFileById(fileId);
             res
                 .status(200)
                 .json({ message: 'image retrieved successfully', url: imageUrl });
@@ -81,11 +83,11 @@ export class FirebaseStorageController {
 
     @Delete(':id')
     async deleteById(
-        @Param('id') fileId: string,
+        @Param('id', ParseIntPipe) fileId: number,
         @Res() res: Response,
     ) {
         try {
-            const imageUrl = await this.firebaseStorageService.deleteFile(Number(fileId));
+            const imageUrl = await this.firebaseStorageService.deleteFile(fileId);
             res
                 .status(200)
                 .json({ message: 'image deleted successfully', url: imageUrl });
