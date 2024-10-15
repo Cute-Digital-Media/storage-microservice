@@ -5,22 +5,15 @@ FROM node:${NODE_VERSION}-alpine as base
 
 WORKDIR /usr/src/app
 
+COPY package.json yarn.lock ./
+RUN yarn install --production
 
-FROM base as deps
-
-RUN --mount=type=bind,source=package.json,target=package.json \
-    --mount=type=bind,source=yarn.lock,target=yarn.lock \
-    --mount=type=cache,target=/root/.yarn \
-    yarn install --production 
-
-FROM deps as build
-
-RUN --mount=type=bind,source=package.json,target=package.json \
-    --mount=type=bind,source=yarn.lock,target=yarn.lock \
-    --mount=type=cache,target=/root/.yarn \
-    yarn install 
+FROM base as build
 
 COPY . .
+
+RUN yarn install
+
 RUN yarn run build
 
 FROM base as final
@@ -29,12 +22,9 @@ ENV NODE_ENV production
 
 USER node
 
-COPY package.json .
-
-COPY --from=deps /usr/src/app/node_modules ./node_modules
-COPY --from=build /usr/src/app/dist/ ./dist/
-
+COPY --from=build /usr/src/app/dist ./dist
+COPY --from=base /usr/src/app/node_modules ./node_modules
 
 EXPOSE 3000
 
-CMD yarn start
+CMD ["yarn", "start"]
