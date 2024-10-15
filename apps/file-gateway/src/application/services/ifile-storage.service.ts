@@ -9,5 +9,5 @@ export interface IFileStorageService {
 
     deleteFileAsync(filePath: string, isPrivate: boolean): Promise<Result<void>>;
 
-    getFileAsync(fileName: string, isPrivate: boolean): Promise<Result<FileModel>>;
+    getFileAsync(fileName: string, isPrivate: boolean): Promise<Result<Buffer>>;
 }

@@ -7,7 +7,6 @@ import { Inject } from "@nestjs/common";
 import { IFileStorageService } from "apps/file-gateway/src/application/services/ifile-storage.service";
 import { IFileRepository } from "apps/file-gateway/src/application/interfaces/reposoitories/ifile-repository";
 import { AppError } from "libs/common/application/errors/app.errors";
-import { StringExtension } from "apps/file-gateway/src/infrastructure/utils/string-extensions";
 
 export class GetOneFileQuery
 {
@@ -31,26 +30,30 @@ export class GetOneFileQueryHandler implements IQueryHandler<GetOneFileQuery, Re
     async execute(query: GetOneFileQuery): Promise<Result<FileModel>> {
         const {userId, dto } = query;
         this.logger.info(`User with id ${userId} is trying to retrieve file ${dto.fileName}`)
-        const { fileName, isPrivate } = query.dto; 
+        const { fileName } = query.dto; 
         
-        const fileNameWithUser = isPrivate ? `${userId}/${fileName}` : fileName;
-
         const file = await this.fileRepository.findOneByFilter({
             where: {
                 fileName: fileName
             }
         })
+        if(file.props.isPrivate == true && file.props.userId != userId)
+        {
+            this.logger.error(`User with id: ${userId} is trying to get a file that belongs to user with id: ${file.props.userId}`)
+            return Result.Fail(new AppError.ValidationError("This user has not access to this resource."))
+        }
         if(!file)
         {
             this.logger.error(`File with name ${fileName} not found.`)  
             return Result.Fail(new AppError.NotFoundError(`File not found.`))
         }        
-        const ans = await this.fileStorageService.getFileAsync(fileNameWithUser,isPrivate);  
+        const ans = await this.fileStorageService.getFileAsync(fileName,file.props.isPrivate);  
         if(ans.isFailure)
         {
             this.logger.error(`Error retrieving file.`)
-            return ans; 
+            return Result.Fail(new AppError.UnexpectedError(ans.unwrapError(),"Error retrieving file.")); 
         }
-        return Result.Ok(ans.unwrap())
+        const buffer = ans.unwrap(); 
+        return Result.Ok(new FileModel(buffer, fileName,file.props.type))
     }   
 }

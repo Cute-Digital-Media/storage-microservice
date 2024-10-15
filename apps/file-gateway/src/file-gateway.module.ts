@@ -13,10 +13,10 @@ import { config } from 'dotenv';
 import { FileCommandHandlers } from './application/features/file/commands/file.commands';
 import { FileQueries } from './application/features/file/queries/file.queries';
 import { MulterModule } from '@nestjs/platform-express';
-import { diskStorage, memoryStorage } from 'multer';
+import { memoryStorage } from 'multer';
 import { ExternalServicesProviders } from './infrastructure/external-services/external-services';
 import { DbSeeder } from './infrastructure/seed/db-seeder';
-
+import { RedisModule } from '@nestjs-modules/ioredis';
 config();
 @Module({
   imports: [
@@ -38,6 +38,10 @@ config();
     TypeOrmModule.forFeature(PersistenceEntities),
     MulterModule.register({
       storage: memoryStorage()
+    }),
+    RedisModule.forRoot({
+      type: 'single',
+      url: `redis://${EnvVarsAccessor.REDIS_HOST}:${EnvVarsAccessor.REDIS_PORT}`,
     }),
   ],
   controllers: FileGateWayControllers,

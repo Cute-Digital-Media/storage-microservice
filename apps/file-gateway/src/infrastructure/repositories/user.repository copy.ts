@@ -23,7 +23,6 @@ export class UserRepository {
      */
     async saveNew(user: UserEntity): Promise<UserPersistence> {
         const userPersistence = this.mapper.map(user, UserEntity, UserPersistence);
-        console.log({UserPersistence})
         return await this.repository.save(userPersistence);
     }
 

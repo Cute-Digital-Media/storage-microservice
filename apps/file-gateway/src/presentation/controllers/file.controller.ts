@@ -83,13 +83,11 @@ export class FileController {
   @Get(':id')
   async findOne(
     @Param('id') id: string,
-    @Query('isPrivate') isPrivate: string,
     @GetTokenUser('sub') userId: string, 
     @Res() res: Response
   ) {
-    const isPrivateBoolean = isPrivate === 'true';
     const ans = await this.queryBus.execute<GetOneFileQuery, Result<FileModel>>(
-      new GetOneFileQuery(new GetOneFileDto(id, isPrivateBoolean), userId)
+      new GetOneFileQuery(new GetOneFileDto(id), userId)
     );
     
     if (ans.isFailure) {

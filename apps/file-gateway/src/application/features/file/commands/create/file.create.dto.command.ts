@@ -1,5 +1,5 @@
 export class CreateFileDto {
-    isPrivate: boolean; 
+    public isPrivate: boolean; 
 }
 
 

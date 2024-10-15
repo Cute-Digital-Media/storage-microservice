@@ -4,9 +4,9 @@ import { FileModel } from "../../domain/models/file.model";
 import { Result } from "libs/common/application/base";
 import * as admin from 'firebase-admin';
 import { Bucket } from '@google-cloud/storage';
-import { AppError } from "libs/common/application/errors/app.errors";
 import { EnvVarsAccessor } from "libs/common/configs/env-vars-accessor";
 import { ILoggerService } from "../../application/services/ilogger.service";
+import { ICacheService } from "../../application/services/icache.service";
 
 @Injectable()
 export class FireBaseStorageService implements IFileStorageService {
@@ -14,7 +14,9 @@ export class FireBaseStorageService implements IFileStorageService {
 
     constructor(
         @Inject("ILoggerService")
-        private readonly logger: ILoggerService
+        private readonly logger: ILoggerService, 
+        @Inject("ICacheService")
+        private readonly cacheService :ICacheService
     ) {
         admin.initializeApp({
             credential: admin.credential.cert({
@@ -51,6 +53,8 @@ export class FireBaseStorageService implements IFileStorageService {
     
     async editFileAsync(fileName: string, oldPath: string, file: Buffer, isPrivate: boolean, contentType: string): Promise<Result<void>> {
         try {
+            
+            await this.cacheService.invalidateCachedValue(fileName); 
             this.logger.info(`Editing file: ${fileName}, deleting old file: ${oldPath}`);
             await this.deleteFileAsync(oldPath, isPrivate);
             return await this.uploadFileAsync(fileName, file, isPrivate, contentType);
@@ -62,6 +66,7 @@ export class FireBaseStorageService implements IFileStorageService {
 
     async deleteFileAsync(filePath: string, isPrivate: boolean): Promise<Result<void>> {
         try {
+            await this.cacheService.invalidateCachedValue(filePath); 
             this.logger.info(`Deleting file: ${filePath}`);
             const fileRef = this.bucket.file(filePath);
             await fileRef.delete();
@@ -72,13 +77,15 @@ export class FireBaseStorageService implements IFileStorageService {
             return Result.Fail<void>(error.message);
         }
     }
-    async getFileAsync(fileName: string, isPrivate: boolean): Promise<Result<FileModel>> {
+    async getFileAsync(fileName: string, isPrivate: boolean): Promise<Result<Buffer>> {
         try {
-            
+            const cachedResult = await this.cacheService.readCachedValue(fileName); 
+            if(cachedResult.isSuccess)
+            {
+                return cachedResult; 
+            }
             this.logger.info(`Fetching file: ${fileName}`);
-            const fileRef = this.bucket.file(fileName);
-            const [metadata] = await fileRef.getMetadata();
-            
+            const fileRef = this.bucket.file(fileName);            
             const buffer: Buffer = await new Promise((resolve, reject) => {
                 const chunks: any[] = [];
                 const stream = fileRef.createReadStream();
@@ -97,16 +104,22 @@ export class FireBaseStorageService implements IFileStorageService {
                     reject(err);
                 });
             });
-            const fileModel = new FileModel(
-                buffer,
-                fileName,
-                metadata.contentType
-            );
             this.logger.info(`File fetched successfully: ${fileName}`);
-            return Result.Ok<FileModel>(fileModel);
+            
+            //Caching 
+            const cachingResult = await this.cacheService.writeCachedValue(fileName,buffer,+EnvVarsAccessor.REDIS_RESOURCE_EXPIRATION_TIME);  
+            
+            if(cachingResult.isFailure)
+            {
+                this.logger.error("Error caching the file")
+                return cachingResult; 
+            }
+            
+            this.logger.info("File successfully cached.")
+            return Result.Ok<Buffer>(buffer);
         } catch (error) {
             this.logger.error(`Error in getFileAsync: ${error.message}`);
-            return Result.Fail<FileModel>(error.message);
+            return Result.Fail<Buffer>(error.message);
         }
     }
     

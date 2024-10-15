@@ -27,6 +27,9 @@ export class FileEntityProps
 
     @AutoMap()
     public isPrivate: boolean   
+
+    @AutoMap()
+    public originalFileName: string   
 }
  
 

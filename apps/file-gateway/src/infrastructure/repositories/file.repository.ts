@@ -23,7 +23,6 @@ export class FileRepository {
      */
     async saveNew(file: FileEntity): Promise<FilePersistence> {
         const filePersistence = this.mapper.map(file, FileEntity, FilePersistence);
-        console.log({filePersistence})
         return await this.repository.save(filePersistence);
     }
 

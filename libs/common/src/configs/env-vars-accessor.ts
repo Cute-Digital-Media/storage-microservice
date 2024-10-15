@@ -9,6 +9,9 @@ export enum EnvVars {
     FIREBASE_PRIVATE_KEY = "FIREBASE_PRIVATE_KEY",
     FIREBASE_STORAGE_BUCKET = "FIREBASE_STORAGE_BUCKET",
     MS_HOST = "MS_HOST",
+    REDIS_HOST = "REDIS_HOST",
+    REDIS_PORT = "REDIS_PORT",
+    REDIS_RESOURCE_EXPIRATION_TIME = "REDIS_RESOURCE_EXPIRATION_TIME",
 }
 
 export class EnvVarsAccessor {
@@ -52,4 +55,17 @@ export class EnvVarsAccessor {
     static get MS_HOST(): string {
         return EnvVarsAccessor.getValue(EnvVars.MS_HOST);
     }
+
+    static get REDIS_HOST(): string {
+        return EnvVarsAccessor.getValue(EnvVars.REDIS_HOST);
+    }
+
+    static get REDIS_PORT(): string {
+        return EnvVarsAccessor.getValue(EnvVars.REDIS_PORT);
+    }
+
+    static get REDIS_RESOURCE_EXPIRATION_TIME(): string {
+        return EnvVarsAccessor.getValue(EnvVars.REDIS_RESOURCE_EXPIRATION_TIME);
+    }
+
 }

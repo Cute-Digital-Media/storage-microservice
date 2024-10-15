@@ -11,6 +11,10 @@ export class FilePersistence extends AuditablePersistenceEntity{
 
     @AutoMap()
     @Column({ type: 'text'})
+    public originalFileName: string;
+
+    @AutoMap()
+    @Column({ type: 'text'})
     public type: string
 
     @AutoMap()
