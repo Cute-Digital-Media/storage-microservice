@@ -29,7 +29,7 @@ export class GetOneFileQueryHandler implements IQueryHandler<GetOneFileQuery, Re
     ) {}
     async execute(query: GetOneFileQuery): Promise<Result<FileModel>> {
         const {userId, dto } = query;
-        this.logger.info(`User with id ${userId} is trying to retrieve file ${dto.fileName}`)
+        await this.logger.auditAsync(userId,`Trying to retrieve file ${dto.fileName}`)
         const { fileName } = query.dto; 
         
         const file = await this.fileRepository.findOneByFilter({
@@ -45,6 +45,7 @@ export class GetOneFileQueryHandler implements IQueryHandler<GetOneFileQuery, Re
         if(file.props.isPrivate == true && file.props.userId != userId)
         {
             this.logger.error(`User with id: ${userId} is trying to get a file that belongs to user with id: ${file.props.userId}`)
+            this.logger.auditAsync(userId,`Trying to get a file that belongs to user with id: ${file.props.userId}`)
             return Result.Fail(new AppError.ValidationError("This user has not access to this resource."))
         }   
         const ans = await this.fileStorageService.getFileAsync(fileName,file.props.isPrivate);  
