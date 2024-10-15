@@ -4,11 +4,13 @@ import {
   Controller,
   Delete,
   Get,
+  HttpStatus,
   Param,
   ParseIntPipe,
   Post,
   Query,
   Req,
+  Res,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -17,9 +19,12 @@ import {
   ApiBearerAuth,
   ApiBody,
   ApiConsumes,
+  ApiProduces,
   ApiQuery,
+  ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import { Public } from '../auth/decorators/public.decorator';
 import { ImageDto } from './dto/image.dto';
@@ -42,15 +47,37 @@ export class ImagesController {
   @Get('findOne')
   @ApiQuery({ name: 'id', required: false, type: String })
   @ApiQuery({ name: 'name', required: false, type: String })
-  async getOneImage(@Query('id') id?: string, @Query('name') name?: string) {
-    if (id) {
-      return await this.imagesService.getImageById(+id);
-    } else if (name) {
-      return await this.imagesService.getImageByName(name);
+  @ApiResponse({
+    schema: {
+      type: 'string',
+      format: 'binary',
+    },
+    status: HttpStatus.OK,
+  })
+  @ApiProduces('image/webp')
+  async getOneImage(
+    @Res() res: Response,
+    @Query('id') id?: string,
+    @Query('name') name?: string,
+  ) {
+    if (!id && !name) {
+      throw new BadRequestException(
+        `You must provide at least one of these arguments: 'id' or 'name'`,
+      );
     }
-    throw new BadRequestException(
-      `You must provide at least one of these arguments: 'id' or 'name'`,
-    );
+    let imageDto = null;
+    if (id) {
+      imageDto = await this.imagesService.getImageById(+id);
+    } else if (name) {
+      imageDto = await this.imagesService.getImageByName(name);
+    }
+
+    const buffer: any = imageDto.buffer;
+    const mimeType = 'image/webp';
+    const b64 = Buffer.from(buffer.data, 'base64');
+    res.contentType(mimeType);
+    res.attachment(`${imageDto.firebaseFileName}.webp`);
+    res.send(b64);
   }
 
   @Post('upload')
