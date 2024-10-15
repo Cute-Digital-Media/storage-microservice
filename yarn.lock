@@ -1056,6 +1056,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@golevelup/ts-jest@npm:^0.5.6":
+  version: 0.5.6
+  resolution: "@golevelup/ts-jest@npm:0.5.6"
+  checksum: 10c0/42e10f55a8c4aff3e18b489d43df108e8c6c71c9414f366a8c84fd5523eb8b66b2f4349ad33686126831aabec63a7a43d42f0e5511fb89c804662a7fc36b3595
+  languageName: node
+  linkType: hard
+
 "@google-cloud/firestore@npm:^7.7.0":
   version: 7.10.0
   resolution: "@google-cloud/firestore@npm:7.10.0"
@@ -7297,6 +7304,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "nestjs-backend-template@workspace:."
   dependencies:
+    "@golevelup/ts-jest": "npm:^0.5.6"
     "@liaoliaots/nestjs-redis": "npm:^10.0.0"
     "@nestjs/axios": "npm:^3.0.3"
     "@nestjs/cache-manager": "npm:^2.2.2"
