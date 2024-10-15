@@ -32,7 +32,7 @@ export class FirebaseStorageController {
     async uploadFile(
         @UploadedFile(SharpPipe) file: Express.Multer.File,
         @Body() uploadFileDto: UploadFileDto,
-        @Res() res: Response,
+        @Res() res: Response
     ) {
         if (!file) {
             return this.handleError(res, new BadRequestException('file is required'));
