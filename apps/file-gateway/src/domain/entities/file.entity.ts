@@ -30,6 +30,9 @@ export class FileEntityProps
 
     @AutoMap()
     public originalFileName: string   
+
+    @AutoMap()
+    public thumbnailFileName: string   
 }
  
 

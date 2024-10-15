@@ -1,5 +1,4 @@
 import { IQueryHandler, QueryHandler } from "@nestjs/cqrs";
-import { GetOneFileDto } from "./file.get-one.dto";
 import { FileModel } from "apps/file-gateway/src/domain/models/file.model";
 import { Result } from "libs/common/application/base";
 import { ILoggerService } from "apps/file-gateway/src/application/services/ilogger.service";
@@ -7,17 +6,18 @@ import { Inject } from "@nestjs/common";
 import { IFileStorageService } from "apps/file-gateway/src/application/services/ifile-storage.service";
 import { IFileRepository } from "apps/file-gateway/src/application/interfaces/reposoitories/ifile-repository";
 import { AppError } from "libs/common/application/errors/app.errors";
+import { GetThumbnailDto } from "./file.get-thumbnail.dto";
 
-export class GetOneFileQuery
+export class GetThumbnailQuery
 {
     constructor(
-        public dto: GetOneFileDto, 
+        public dto: GetThumbnailDto, 
         public userId: string
     ) {}
 }
 
-@QueryHandler(GetOneFileQuery)
-export class GetOneFileQueryHandler implements IQueryHandler<GetOneFileQuery, Result<FileModel>>
+@QueryHandler(GetThumbnailQuery)
+export class GetThumbnailQueryHandler implements IQueryHandler<GetThumbnailQuery, Result<FileModel>>
 {
     constructor(
         @Inject("ILoggerService")
@@ -27,7 +27,7 @@ export class GetOneFileQueryHandler implements IQueryHandler<GetOneFileQuery, Re
         @Inject("IFileRepository")
         private readonly fileRepository : IFileRepository
     ) {}
-    async execute(query: GetOneFileQuery): Promise<Result<FileModel>> {
+    async execute(query: GetThumbnailQuery): Promise<Result<FileModel>> {
         const {userId, dto } = query;
         this.logger.info(`User with id ${userId} is trying to retrieve file ${dto.fileName}`)
         const { fileName } = query.dto; 
@@ -47,7 +47,7 @@ export class GetOneFileQueryHandler implements IQueryHandler<GetOneFileQuery, Re
             this.logger.error(`User with id: ${userId} is trying to get a file that belongs to user with id: ${file.props.userId}`)
             return Result.Fail(new AppError.ValidationError("This user has not access to this resource."))
         }   
-        const ans = await this.fileStorageService.getFileAsync(fileName,file.props.isPrivate);  
+        const ans = await this.fileStorageService.getFileAsync(file.props.thumbnailFileName,file.props.isPrivate);  
         if(ans.isFailure)
         {
             this.logger.error(`Error retrieving file.`)

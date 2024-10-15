@@ -15,6 +15,8 @@ import { GetAllFilesQuery } from '../../application/features/file/queries/get-al
 import { PaginationDto } from 'libs/common/presentation/dtos/pagination.dto';
 import { GetAllFilesDto } from '../../application/features/file/queries/get-all/file.get-all.dto';
 import { DeleteFileCommand } from '../../application/features/file/commands/delete/file.delete.command';
+import { GetThumbnailQuery } from '../../application/features/file/queries/get-thumbnail/file.get-thumbnail.query';
+import { GetThumbnailDto } from '../../application/features/file/queries/get-thumbnail/file.get-thumbnail.dto';
 
 @Controller('file')
 export class FileController {
@@ -89,6 +91,25 @@ export class FileController {
   ) {
     const ans = await this.queryBus.execute<GetOneFileQuery, Result<FileModel>>(
       new GetOneFileQuery(new GetOneFileDto(id), userId)
+    );
+    
+    if (ans.isFailure) {
+      return res.send(ans);
+    }
+
+    const file = ans.unwrap();    
+    res.setHeader('Content-Type', file.contentType);
+    return res.send(file.file);    
+  }
+
+  @Get('thumbnail/:id')
+  async findThumbNail(
+    @Param('id') id: string,
+    @GetTokenUser('sub') userId: string, 
+    @Res() res: Response
+  ) {
+    const ans = await this.queryBus.execute<GetThumbnailQuery, Result<FileModel>>(
+      new GetThumbnailQuery(new GetThumbnailDto(id), userId)
     );
     
     if (ans.isFailure) {

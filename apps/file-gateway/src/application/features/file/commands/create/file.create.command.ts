@@ -13,6 +13,7 @@ import { ValidMimeTypes } from "apps/file-gateway/src/domain/constants/valid-mim
 import { AppError } from "libs/common/application/errors/app.errors";
 import { EnvVarsAccessor } from "libs/common/configs/env-vars-accessor";
 import { StringExtension } from "apps/file-gateway/src/infrastructure/utils/string-extensions";
+import * as sharp from 'sharp';
 
 export class CreateFileCommand
 {
@@ -59,6 +60,18 @@ export class CreateFileCommandHandler implements ICommandHandler<CreateFileComma
             this.logger.error(`An error ocurred uploading the file.`)        
             return Result.Fail(uploadResult.unwrapError())
         }
+        this.logger.info(`Creating thumbnail.`)
+        const thumbnailBuffer = await sharp(command.data)
+            .resize(200)
+            .toBuffer();
+        const thumbnailFileName = generatedFileName + "_thumbnail" 
+        const thumbnailUploadResult = await this.storageFileService.uploadFileAsync(thumbnailFileName,thumbnailBuffer,isPrivate,type); 
+        if(thumbnailUploadResult.isFailure)
+        {
+            this.logger.error(`An error ocurred uploading the thumb nail file.`)        
+            return Result.Fail(thumbnailUploadResult.unwrapError())
+        }
+
         const fileUrl = EnvVarsAccessor.MS_HOST + ":" + EnvVarsAccessor.MS_PORT + "/api/fileGW/file/" + generatedFileName; 
         const file = new FileEntity({
                 fileName: generatedFileName,
@@ -67,7 +80,8 @@ export class CreateFileCommandHandler implements ICommandHandler<CreateFileComma
                 size,
                 url: fileUrl,
                 userId,
-                isPrivate
+                isPrivate, 
+                thumbnailFileName 
             });
         
         const saveResult = await this.fileRepository.saveNew(file)

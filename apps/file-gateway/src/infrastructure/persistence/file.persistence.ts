@@ -36,7 +36,11 @@ export class FilePersistence extends AuditablePersistenceEntity{
     @AutoMap()
     @Column({ type: 'boolean'})
     public isPrivate: boolean   
-    
+
+    @AutoMap()
+    @Column({ type: 'text'})
+    public thumbnailFileName: string 
+
     @AutoMap()
     @ManyToOne(() => UserPersistence)
     @JoinColumn({ name: 'user_id' })

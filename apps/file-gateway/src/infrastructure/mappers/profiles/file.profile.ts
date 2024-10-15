@@ -25,6 +25,7 @@ export class FileProfile extends AutomapperProfile {
                 forMember(dest => dest.userId, mapFrom(src => src.props.userId)),
                 forMember(dest => dest.isPrivate, mapFrom(src => src.props.isPrivate)),
                 forMember(dest => dest.originalFileName, mapFrom(src => src.props.originalFileName)),
+                forMember(dest => dest.thumbnailFileName, mapFrom(src => src.props.thumbnailFileName)),
                 forMember(dest => dest.user, mapFrom(src => {
                     return this.mapper.map(src.props.user, UserEntity, UserPersistence); 
                 }))
@@ -40,6 +41,7 @@ export class FileProfile extends AutomapperProfile {
                     userId: src.userId,
                     isPrivate: src.isPrivate,
                     originalFileName: src.originalFileName,
+                    thumbnailFileName: src.thumbnailFileName,
                     user: this.mapper.map(src.user, UserPersistence, UserEntity)
                 }))),
                 forMember(dest => dest.id, mapFrom(src => src.id))
