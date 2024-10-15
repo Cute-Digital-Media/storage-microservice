@@ -23,6 +23,7 @@ export class FileController {
   constructor(
     private readonly queryBus: QueryBus, 
     private readonly commandBus: CommandBus, 
+    
     @Inject("ILoggerService")
     private readonly logger: LoggerService
   ) {}

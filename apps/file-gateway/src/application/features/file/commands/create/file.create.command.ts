@@ -41,7 +41,7 @@ export class CreateFileCommandHandler implements ICommandHandler<CreateFileComma
     ) {}
     async execute(command: CreateFileCommand): Promise<Result<FileEntity>> {
         const {  size, type, userId, fileName} = command; 
-        this.logger.info(`User with id ${userId} is creating a new file with extension ${command.type}.`)        
+        await this.logger.auditAsync(userId,`Create a new file with extension ${command.type}.`)        
         
         const { isPrivate } = command.dto;
 
@@ -53,7 +53,7 @@ export class CreateFileCommandHandler implements ICommandHandler<CreateFileComma
             this.logger.error(`Invalid mime type ${type}.`)
             return Result.Fail(new AppError.ValidationError(`Invalid mime type ${type}.`))
         }
-        this.logger.info(`Uploading file to storage with name: ${generatedFileName}.`)
+        await this.logger.auditAsync(userId,`Uploading file to storage with name: ${generatedFileName}.`)
         const uploadResult = await this.storageFileService.uploadFileAsync(generatedFileName,command.data,isPrivate,type); 
         if(uploadResult.isFailure)
         {
