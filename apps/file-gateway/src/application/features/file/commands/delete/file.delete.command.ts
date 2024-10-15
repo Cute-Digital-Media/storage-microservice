@@ -33,7 +33,7 @@ export class DeleteFileCommandHandler implements ICommandHandler<DeleteFileComma
         
         const file = await this.fileRepository.findOneByFilter({
             where: {
-                fileName: fileName
+                fileName
             }
         })
         if(!file)
@@ -42,9 +42,8 @@ export class DeleteFileCommandHandler implements ICommandHandler<DeleteFileComma
             return Result.Fail(new AppError.NotFoundError(`File not found.`))
         }
         const isPrivate = file.props.isPrivate; 
-        const fileNameWithUser = isPrivate ? `${userId}/${fileName}` : fileName;
         
-        const ans = await this.fileStorageService.deleteFileAsync(fileNameWithUser,isPrivate);  
+        const ans = await this.fileStorageService.deleteFileAsync(fileName,isPrivate);  
         if(ans.isFailure)
         {
             this.logger.error(`Error deleting the file.`)

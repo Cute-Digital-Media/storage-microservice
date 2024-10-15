@@ -14,6 +14,7 @@ import { Response } from 'express';
 import { GetAllFilesQuery } from '../../application/features/file/queries/get-all/file.get-all.query';
 import { PaginationDto } from 'libs/common/presentation/dtos/pagination.dto';
 import { GetAllFilesDto } from '../../application/features/file/queries/get-all/file.get-all.dto';
+import { DeleteFileCommand } from '../../application/features/file/commands/delete/file.delete.command';
 
 @Controller('file')
 export class FileController {
@@ -104,8 +105,14 @@ export class FileController {
   //   throw new NotImplementedException()
   // }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    throw new NotImplementedException()
+  @Delete(':fileName')
+  async remove(
+    @Param('fileName') fileName: string,
+    @GetTokenUser('sub') userId: string 
+  ) {
+    const ans = await this.commandBus.execute<DeleteFileCommand, Result<void>>(
+      new DeleteFileCommand(fileName,userId)
+    );
+    return ans; 
   }
 }
