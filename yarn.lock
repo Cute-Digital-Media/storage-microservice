@@ -1242,6 +1242,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@nestjs/cache-manager@npm:^2.2.2":
+  version: 2.2.2
+  resolution: "@nestjs/cache-manager@npm:2.2.2"
+  peerDependencies:
+    "@nestjs/common": ^9.0.0 || ^10.0.0
+    "@nestjs/core": ^9.0.0 || ^10.0.0
+    cache-manager: <=5
+    rxjs: ^7.0.0
+  checksum: 10c0/03c1049bcf875e60e88eb9578e5e59290aa61747e5fcd418e7c23c1cb251597c2b0dbe0ec5f4b3b567beb8bd41fb507a4738c9c677a7925d2f712ae2628cf481
+  languageName: node
+  linkType: hard
+
 "@nestjs/cli@npm:^10.4.5":
   version: 10.4.5
   resolution: "@nestjs/cli@npm:10.4.5"
@@ -1772,6 +1784,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/cache-manager-redis-store@npm:^2.0.4":
+  version: 2.0.4
+  resolution: "@types/cache-manager-redis-store@npm:2.0.4"
+  dependencies:
+    "@types/cache-manager": "npm:*"
+    "@types/redis": "npm:^2.8.0"
+  checksum: 10c0/a8e28cb59b4e54f6a19966888ed7e17eb0c491d3a186d888619529d775e265736551e69f9894821322ef97af3a231df460e5617388da75cf6d215fb6f382d29a
+  languageName: node
+  linkType: hard
+
+"@types/cache-manager@npm:*":
+  version: 4.0.6
+  resolution: "@types/cache-manager@npm:4.0.6"
+  checksum: 10c0/3cf78d7ec98a03f651ceb31cc7fbd56f25476c90892d3b19a60c645e8fdd6fe7df99b14afde3fcaec407ab8bb5c8e77332dded77b335cad0fc4b06fbf2df5d62
+  languageName: node
+  linkType: hard
+
 "@types/caseless@npm:*":
   version: 0.12.5
   resolution: "@types/caseless@npm:0.12.5"
@@ -2032,6 +2061,15 @@ __metadata:
   version: 1.2.7
   resolution: "@types/range-parser@npm:1.2.7"
   checksum: 10c0/361bb3e964ec5133fa40644a0b942279ed5df1949f21321d77de79f48b728d39253e5ce0408c9c17e4e0fd95ca7899da36841686393b9f7a1e209916e9381a3c
+  languageName: node
+  linkType: hard
+
+"@types/redis@npm:^2.8.0":
+  version: 2.8.32
+  resolution: "@types/redis@npm:2.8.32"
+  dependencies:
+    "@types/node": "npm:*"
+  checksum: 10c0/99fd52ffc1f4c2cbe3f1ec7a38f9a85a128a430fcbf8e241914d8687ea53555e90dc7b66b3ff1a0c9b74afa1c677551ee405b1f73926c944dadc6026e5e6a80a
   languageName: node
   linkType: hard
 
@@ -2750,6 +2788,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"async@npm:3.2.3":
+  version: 3.2.3
+  resolution: "async@npm:3.2.3"
+  checksum: 10c0/109780c846f05109dde14412d916ae4ed6daf6f9aad0c4aa1dcf0d4da775a3a9e35e0e06e4e06ad9fed66f99ca15549da16f2f243c56103b346e9d3bcd9c943f
+  languageName: node
+  linkType: hard
+
 "async@npm:^3.2.3":
   version: 3.2.5
   resolution: "async@npm:3.2.5"
@@ -3047,6 +3092,26 @@ __metadata:
     tar: "npm:^6.1.11"
     unique-filename: "npm:^3.0.0"
   checksum: 10c0/6c055bafed9de4f3dcc64ac3dc7dd24e863210902b7c470eb9ce55a806309b3efff78033e3d8b4f7dcc5d467f2db43c6a2857aaaf26f0094b8a351d44c42179f
+  languageName: node
+  linkType: hard
+
+"cache-manager-redis-store@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "cache-manager-redis-store@npm:2.0.0"
+  dependencies:
+    redis: "npm:^3.0.2"
+  checksum: 10c0/366d81baa1f59ba6077bb0ac1ee9d37b81c4410a9937d3c77ec254a79a0725639d09e65174b9022f716b317a7d470f983767d84c1a56063f35b70baa8dcb6d11
+  languageName: node
+  linkType: hard
+
+"cache-manager@npm:^4.0.0":
+  version: 4.1.0
+  resolution: "cache-manager@npm:4.1.0"
+  dependencies:
+    async: "npm:3.2.3"
+    lodash.clonedeep: "npm:^4.5.0"
+    lru-cache: "npm:^7.10.1"
+  checksum: 10c0/64287c95882b47b4525ba8c699862e6fc1e847ebdfc4084f463ecf254a4101eea5e0160236a7d9b633e8d9a75c1ed5bd5bc8b19c5bb3341ae729e2ab4b4be6eb
   languageName: node
   linkType: hard
 
@@ -3654,6 +3719,13 @@ __metadata:
   version: 1.0.0
   resolution: "delegates@npm:1.0.0"
   checksum: 10c0/ba05874b91148e1db4bf254750c042bf2215febd23a6d3cda2e64896aef79745fbd4b9996488bd3cafb39ce19dbce0fd6e3b6665275638befffe1c9b312b91b5
+  languageName: node
+  linkType: hard
+
+"denque@npm:^1.5.0":
+  version: 1.5.1
+  resolution: "denque@npm:1.5.1"
+  checksum: 10c0/9e6fc1a63e1c9ded38325290302fef40e5ad28471ad8c66d68eaea623ef847bd25fc75a7c3f47396206dc967922615999066470a364e1786f2758d61337872b7
   languageName: node
   linkType: hard
 
@@ -6252,6 +6324,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lru-cache@npm:^7.10.1":
+  version: 7.18.3
+  resolution: "lru-cache@npm:7.18.3"
+  checksum: 10c0/b3a452b491433db885beed95041eb104c157ef7794b9c9b4d647be503be91769d11206bb573849a16b4cc0d03cbd15ffd22df7960997788b74c1d399ac7a4fed
+  languageName: node
+  linkType: hard
+
 "lru-memoizer@npm:^2.2.0":
   version: 2.3.0
   resolution: "lru-memoizer@npm:2.3.0"
@@ -6662,6 +6741,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "nestjs-backend-template@workspace:."
   dependencies:
+    "@nestjs/cache-manager": "npm:^2.2.2"
     "@nestjs/cli": "npm:^10.4.5"
     "@nestjs/common": "npm:^10.4.4"
     "@nestjs/config": "npm:^3.2.3"
@@ -6674,6 +6754,7 @@ __metadata:
     "@nestjs/testing": "npm:^10.4.4"
     "@nestjs/typeorm": "npm:^10.0.2"
     "@types/bcrypt": "npm:^5"
+    "@types/cache-manager-redis-store": "npm:^2.0.4"
     "@types/express": "npm:^4.17.21"
     "@types/jest": "npm:^29.5.13"
     "@types/multer": "npm:^1.4.12"
@@ -6685,6 +6766,8 @@ __metadata:
     "@typescript-eslint/parser": "npm:^7.18.0"
     axios: "npm:^1.7.7"
     bcrypt: "npm:^5.1.1"
+    cache-manager: "npm:^4.0.0"
+    cache-manager-redis-store: "npm:^2.0.0"
     class-transformer: "npm:^0.5.1"
     class-validator: "npm:^0.14.1"
     eslint: "npm:^8.57.1"
@@ -6701,6 +6784,7 @@ __metadata:
     sharp: "npm:^0.33.5"
     source-map-support: "npm:^0.5.21"
     supertest: "npm:^7.0.0"
+    swagger-ui-express: "npm:^5.0.1"
     ts-jest: "npm:^29.2.5"
     ts-loader: "npm:^9.5.1"
     ts-node: "npm:^10.9.2"
@@ -7511,6 +7595,41 @@ __metadata:
   languageName: node
   linkType: hard
 
+"redis-commands@npm:^1.7.0":
+  version: 1.7.0
+  resolution: "redis-commands@npm:1.7.0"
+  checksum: 10c0/c78b46d8d6e811f422961878538c57048a451ab56760d3f1657a7c8f29aaae42cc23890f75655556a59ec67611022e18cb443d2976e6c55036934bfe783aa60e
+  languageName: node
+  linkType: hard
+
+"redis-errors@npm:^1.0.0, redis-errors@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "redis-errors@npm:1.2.0"
+  checksum: 10c0/5b316736e9f532d91a35bff631335137a4f974927bb2fb42bf8c2f18879173a211787db8ac4c3fde8f75ed6233eb0888e55d52510b5620e30d69d7d719c8b8a7
+  languageName: node
+  linkType: hard
+
+"redis-parser@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "redis-parser@npm:3.0.0"
+  dependencies:
+    redis-errors: "npm:^1.0.0"
+  checksum: 10c0/ee16ac4c7b2a60b1f42a2cdaee22b005bd4453eb2d0588b8a4939718997ae269da717434da5d570fe0b05030466eeb3f902a58cf2e8e1ca058bf6c9c596f632f
+  languageName: node
+  linkType: hard
+
+"redis@npm:^3.0.2":
+  version: 3.1.2
+  resolution: "redis@npm:3.1.2"
+  dependencies:
+    denque: "npm:^1.5.0"
+    redis-commands: "npm:^1.7.0"
+    redis-errors: "npm:^1.2.0"
+    redis-parser: "npm:^3.0.0"
+  checksum: 10c0/452d4ed65948b101e379c1abcce7682619382c90929a6611baae5f7f1d38134ce20ad65adfbaa569b735274b49db14a2ebb622800e0b45a4d1559e2133c7aabe
+  languageName: node
+  linkType: hard
+
 "reflect-metadata@npm:^0.2.1, reflect-metadata@npm:^0.2.2":
   version: 0.2.2
   resolution: "reflect-metadata@npm:0.2.2"
@@ -8248,10 +8367,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"swagger-ui-dist@npm:5.17.14":
+"swagger-ui-dist@npm:5.17.14, swagger-ui-dist@npm:>=5.0.0":
   version: 5.17.14
   resolution: "swagger-ui-dist@npm:5.17.14"
   checksum: 10c0/cb61bba39e76d7d0d83da605a55e9504c1a5b421f9f13cced06d3e222f0a291594d417ec57b30a38aabe30d8a7e257c4977b8f0bba0e865d60f92b0a8ef4dfc1
+  languageName: node
+  linkType: hard
+
+"swagger-ui-express@npm:^5.0.1":
+  version: 5.0.1
+  resolution: "swagger-ui-express@npm:5.0.1"
+  dependencies:
+    swagger-ui-dist: "npm:>=5.0.0"
+  peerDependencies:
+    express: ">=4.0.0 || >=5.0.0-beta"
+  checksum: 10c0/dbe9830caef7fe455241e44e74958bac62642997e4341c1b0f38a3d684d19a4a81b431217c656792d99f046a1b5f261abf7783ede0afe41098cd4450401f6fd1
   languageName: node
   linkType: hard
 
