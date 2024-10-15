@@ -102,6 +102,12 @@ You should use the following tech stack during this project:
 4. **Start the Service**
     ```bash
     yarn start:dev
+   
+4.1 **migrations**
+- Note: start the service and read swagger documentation in the next url.
+    ```bash
+  https://localhost:3000/api-docs
+    ```
     
 6. **Final considerations and recomendations**
 - Keep it simple.
