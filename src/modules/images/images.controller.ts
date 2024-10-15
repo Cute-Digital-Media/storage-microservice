@@ -16,8 +16,9 @@ import { ImagesService } from './images.service';
 import { JwtAuthGuard } from '../config/auth/app/guards/jwtGuards';
 import { GetUser } from '../config/auth/app/decorators/getUser.decorator';
 import { CacheInterceptor, CacheKey } from '@nestjs/cache-manager';
-import { ApiBody, ApiConsumes, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 @ApiTags('images')
+@ApiBearerAuth()
 @Controller('images')
 @UseGuards(JwtAuthGuard)
 export class ImagesController {
