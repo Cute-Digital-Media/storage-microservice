@@ -78,3 +78,7 @@ You should use the following tech stack during this project:
 - Good luck :).
 
    
+# Docker deployment
+```bash
+docker-compose up --build
+```
