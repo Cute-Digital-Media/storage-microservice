@@ -65,7 +65,29 @@ You should use the following tech stack during this project:
    yarn install
    
 3. **.env variables**
-- You should update this point to include env names needed.
+   ```bash
+   TYPE=service_account
+   PROJECT_ID=<your_project_id>
+   PRIVATE_KEY_ID=<your_private_key_id>
+   PRIVATE_KEY=<your_private_key>
+   CLIENT_EMAIL=<your_client_email>
+   CLIENT_ID=<your_client_id>
+   UTH_URI=<your_client_uth_uri>
+   TOKEN_URI=<your_client_token_uri>
+   AUTH_CERT_URL=<your_client_auth_cert_url>
+   CLIENT_CERT_URL=<your_client_cert_url>
+   UNIVERSAL_DOMAIN=googleapis.com
+
+   DATABASE_PORT=<database_port>
+   DATABASE_HOST=<host>
+   DATABASE_USER=<db_user>
+   DATABASE_PASSWORD=<db_password>
+   DATABASE_NAME=<db_name>
+
+   JWT_SECRET=<jwt_secret>
+
+   REDIS_HOST=<redis_host>
+   REDIS_PORT=<redis_port>
 
 4. **Start the Service**
     ```bash
